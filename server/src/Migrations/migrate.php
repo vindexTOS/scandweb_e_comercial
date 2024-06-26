@@ -1,25 +1,29 @@
 <?php
 require_once __DIR__ . '/../../config/Database.php';
 
-// Define migrations to be executed
 $migrations = [
     __DIR__ . DIRECTORY_SEPARATOR . "Migration_001_Create_Categories_Table.php",
-    // Add other migration files here as needed
+    __DIR__ . DIRECTORY_SEPARATOR . "Migration_002_Create_Products_Table.php",
+    __DIR__ . DIRECTORY_SEPARATOR . "Migration_003_Create_Currencies_Table.php",
+    __DIR__ . DIRECTORY_SEPARATOR . "Migration_004_Create_Price_Table.php",
+    
+    
+    __DIR__ . DIRECTORY_SEPARATOR . "Migration_005_Create_AttributeSet_Table.php",
+    __DIR__ . DIRECTORY_SEPARATOR . "Migration_006_Create_Attribute_Table.php",
+    
 ];
 
 try {
-    // Establish database connection (Database constructor handles database creation if needed)
     $database = new \App\Config\Database();
     $conn = $database->getConnection();
     
-    // Loop through migrations and execute each one
     foreach ($migrations as $migrationFile) {
         if (file_exists($migrationFile)) {
             require_once $migrationFile;
             $className = basename($migrationFile, '.php');
             if (class_exists($className)) {
                 $migration = new $className($conn);
-                $migration->up();  // Assuming you're running the 'up' method of each migration
+                $migration->up();  
                 echo "Executed migration: $className\n";
             } else {
                 echo "Migration class $className not found in $migrationFile\n";
@@ -34,3 +38,4 @@ try {
     echo "Error executing migration: " . $e->getMessage() . "\n";
 }
 ?>
+

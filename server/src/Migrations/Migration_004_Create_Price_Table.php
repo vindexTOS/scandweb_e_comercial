@@ -2,22 +2,21 @@
 
 require_once "Migration.php";
 
-class Migration_002_Create_Products_Table extends Migration {
+class Migration_004_Create_Price_Table extends Migration {
     public function up() {
         try {
             $sql = "
-                CREATE TABLE products (
+                CREATE TABLE prices (
                     id INT AUTO_INCREMENT PRIMARY KEY,
-                    name VARCHAR(255) NOT NULL,
-                    inStock BOOLEAN,
-                    description TEXT,
-                    category INT,
-                    brand VARCHAR(255),
-                    FOREIGN KEY (category) REFERENCES categories(id) ON DELETE CASCADE
+                    amount DECIMAL(10, 2) NOT NULL,
+                    currency INT,
+                    product_id INT,
+                    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+                    FOREIGN KEY (currency) REFERENCES currencies(id) ON DELETE CASCADE
                 );
             ";
             $this->conn->exec($sql);
-            echo "Migration 002 executed successfully.\n";
+            echo "Migration 003 executed successfully.\n";
         } catch (PDOException $e) {
             echo "Error executing migration: " . $e->getMessage() . "\n";
         }
@@ -25,9 +24,9 @@ class Migration_002_Create_Products_Table extends Migration {
     
     public function rollback() {
         try {
-            $sql = "DROP TABLE products;";
+            $sql = "DROP TABLE prices;";
             $this->conn->exec($sql);
-            echo "Rollback migration 002 executed successfully.\n";
+            echo "Rollback migration 003 executed successfully.\n";
         } catch (PDOException $e) {
             echo "Error rolling back migration: " . $e->getMessage() . "\n";
         }
