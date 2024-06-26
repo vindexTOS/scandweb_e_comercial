@@ -7,14 +7,15 @@ class AttributeSet
     private int $id;
     private string $name;
     private string $type;
-    private array $items;
     
-    public function __construct(int $id, string $name, string $type, array $items)
+    
+    public function __construct(int $id, string $name, string $type )
     {
         $this->id = $id;
         $this->name = $name;
         $this->type = $type;
-        $this->items = $items;
+        
+        
     }
     
     public function getId(): int

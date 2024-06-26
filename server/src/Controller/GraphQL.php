@@ -2,129 +2,88 @@
 
 namespace App\Controller;
 
+use GraphQL\GraphQL as GraphQLBase;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Schema;
-use GraphQL\GraphQL as GraphQLBase;
+use GraphQL\Type\SchemaConfig;
+use PDO;
 use RuntimeException;
 use Throwable;
 
 class GraphQL {
-    public static function handle() {
+    static public function handle() {
         try {
-            // Define the GraphQL types
+            // Define Currency Type
             $currencyType = new ObjectType([
                 'name' => 'Currency',
                 'fields' => [
-                    'label' => Type::string(),
-                    'symbol' => Type::string(),
+                    'id' => Type::nonNull(Type::id()),
+                    'label' => Type::nonNull(Type::string()),
+                    'symbol' => Type::nonNull(Type::string()),
                 ],
             ]);
             
-            $priceType = new ObjectType([
-                'name' => 'Price',
-                'fields' => [
-                    'amount' => Type::float(),
-                    'currency' => $currencyType,
-                ],
-            ]);
-            
-            $attributeType = new ObjectType([
-                'name' => 'Attribute',
-                'fields' => [
-                    'id' => Type::string(),
-                    'displayValue' => Type::string(),
-                    'value' => Type::string(),
-                ],
-            ]);
-            
-            $attributeSetType = new ObjectType([
-                'name' => 'AttributeSet',
-                'fields' => [
-                    'id' => Type::string(),
-                    'name' => Type::string(),
-                    'type' => Type::string(),
-                    'items' => Type::listOf($attributeType),
-                ],
-            ]);
-            
-            $categoryType = new ObjectType([
-                'name' => 'Category',
-                'fields' => [
-                    'id' => Type::int(),
-                    'name' => Type::string(),
-                ],
-            ]);
-            
-            $productType = new ObjectType([
-                'name' => 'Product',
-                'fields' => [
-                    'id' => Type::string(),
-                    'name' => Type::string(),
-                    'inStock' => Type::boolean(),
-                    'gallery' => Type::listOf(Type::string()),
-                    'description' => Type::string(),
-                    'category' => Type::string(),
-                    'attributes' => Type::listOf($attributeSetType),
-                    'prices' => Type::listOf($priceType),
-                    'brand' => Type::string(),
-                ],
-            ]);
-            
+            // Define Query Type
             $queryType = new ObjectType([
                 'name' => 'Query',
                 'fields' => [
-                    'categories' => [
-                        'type' => Type::listOf($categoryType),
-                        'resolve' => function() {
-                            return self::fetchCategories();
-                        },
-                    ],
-                    'products' => [
-                        'type' => Type::listOf($productType),
-                        'resolve' => function() {
-                            return self::fetchProducts();
-                        },
+                    'echo' => [
+                        'type' => Type::string(),
+                        'args' => [
+                            'message' => ['type' => Type::string()],
+                        ],
+                        'resolve' => static fn ($rootValue, array $args): string => $rootValue['prefix'] . $args['message'],
                     ],
                 ],
             ]);
             
+            // Define Mutation Type
             $mutationType = new ObjectType([
                 'name' => 'Mutation',
                 'fields' => [
-                    'addCategory' => [
-                        'type' => $categoryType,
+                    'sum' => [
+                        'type' => Type::int(),
                         'args' => [
-                            'name' => Type::nonNull(Type::string()),
+                            'x' => ['type' => Type::int()],
+                            'y' => ['type' => Type::int()],
                         ],
-                        'resolve' => function($root, $args) {
-                            return self::addCategory($args['name']);
-                        },
+                        'resolve' => static fn ($calc, array $args): int => $args['x'] + $args['y'],
                     ],
-                    'addProduct' => [
-                        'type' => $productType,
+                    'createCurrency' => [
+                        'type' => $currencyType,
                         'args' => [
-                            'name' => Type::nonNull(Type::string()),
-                            'inStock' => Type::nonNull(Type::boolean()),
-                            'gallery' => Type::listOf(Type::string()),
-                            'description' => Type::string(),
-                            'category' => Type::nonNull(Type::string()),
-                            'attributes' => Type::listOf($attributeSetType),
-                            'prices' => Type::listOf($priceType),
-                            'brand' => Type::string(),
+                            'label' => Type::nonNull(Type::string()),
+                            'symbol' => Type::nonNull(Type::string()),
                         ],
-                        'resolve' => function($root, $args) {
-                            return self::addProduct($args);
+                        'resolve' => static function ($rootValue, array $args) {
+                            // Implement the logic to save the currency to the database
+                            $db = new PDO("mysql:host=localhost;dbname=scandweb", "root", "");
+                            $stmt = $db->prepare("INSERT INTO currencies (label, symbol) VALUES (:label, :symbol)");
+                            $stmt->bindParam(':label', $args['label']);
+                            $stmt->bindParam(':symbol', $args['symbol']);
+                            $stmt->execute();
+                            
+                            $currencyId = $db->lastInsertId();
+                            
+                            return [
+                                'id' => $currencyId,
+                                'label' => $args['label'],
+                                'symbol' => $args['symbol'],
+                            ];
                         },
                     ],
                 ],
             ]);
             
-            $schema = new Schema([
-                'query' => $queryType,
-                'mutation' => $mutationType,
-            ]);
+            // Create the Schema
+            $schema = new Schema(
+                (new SchemaConfig())
+                ->setQuery($queryType)
+                ->setMutation($mutationType)
+            );
             
+            // Handle the GraphQL request
             $rawInput = file_get_contents('php://input');
             if ($rawInput === false) {
                 throw new RuntimeException('Failed to get php://input');
@@ -134,7 +93,8 @@ class GraphQL {
             $query = $input['query'];
             $variableValues = $input['variables'] ?? null;
             
-            $result = GraphQLBase::executeQuery($schema, $query, null, null, $variableValues);
+            $rootValue = ['prefix' => 'You said: '];
+            $result = GraphQLBase::executeQuery($schema, $query, $rootValue, null, $variableValues);
             $output = $result->toArray();
         } catch (Throwable $e) {
             $output = [
@@ -146,64 +106,5 @@ class GraphQL {
         
         header('Content-Type: application/json; charset=UTF-8');
         echo json_encode($output);
-    }
-    
-    private static function fetchCategories() {
-        return [
-            ['id' => 1, 'name' => 'all'],
-            ['id' => 2, 'name' => 'clothes'],
-            ['id' => 3, 'name' => 'tech'],
-        ];
-    }
-    
-    private static function fetchProducts() {
-        return [
-            [
-                'id' => 'huarache-x-stussy-le',
-                'name' => 'Nike Air Huarache Le',
-                'inStock' => true,
-                'gallery' => [
-                    "https://cdn.shopify.com/s/files/1/0087/6193/3920/products/DD1381200_DEOA_2_720x.jpg?v=1612816087",
-                ],
-                'description' => '<p>Great sneakers for everyday use!</p>',
-                'category' => 'clothes',
-                'attributes' => [
-                    [
-                        'id' => 'Size',
-                        'name' => 'Size',
-                        'type' => 'text',
-                        'items' => [
-                            ['id' => '40', 'displayValue' => '40', 'value' => '40'],
-                            
-                        ],
-                    ],
-                ],
-                'prices' => [
-                    ['amount' => 144.69, 'currency' => ['label' => 'USD', 'symbol' => '$']],
-                ],
-                'brand' => 'Nike x Stussy',
-            ],
-            
-        ];
-    }
-    
-    private static function addCategory($name) {
-        $newCategory = ['id' => rand(4, 1000), 'name' => $name];
-        return $newCategory;
-    }
-    
-    private static function addProduct($args) {
-        $newProduct = [
-            'id' => uniqid(),
-            'name' => $args['name'],
-            'inStock' => $args['inStock'],
-            'gallery' => $args['gallery'],
-            'description' => $args['description'],
-            'category' => $args['category'],
-            'attributes' => $args['attributes'],
-            'prices' => $args['prices'],
-            'brand' => $args['brand'],
-        ];
-        return $newProduct;
     }
 }

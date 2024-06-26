@@ -27,7 +27,7 @@ class Database {
         try {
             $sql = "CREATE DATABASE IF NOT EXISTS $this->db_name";
             $this->conn->exec($sql);
-            echo "Database '$this->db_name' created successfully or already exists.\n";
+            // echo "Database '$this->db_name' created successfully or already exists.\n";
         } catch(PDOException $e) {
             echo "Error creating database: " . $e->getMessage();
             throw $e;
