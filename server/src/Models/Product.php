@@ -10,22 +10,20 @@ class Product {
     private  int $id;
     private string  $name ;
     private boolean  $inStock ;
-    private  array $gallery;
     private  string $description;
-    private Category $category;
+    private int $category_id;
     private array $attributes;
     private array $prices;
     private string $brand;
     
     
     
-    public function __construct(int $id, string $name, boolean $inStock, array $gallery, string $description, Category $category, array $attributes, array $price, string $brand){
+    public function __construct(int $id, string $name, boolean $inStock,   string $description, Category $category, array $attributes, array $price, string $brand){
         $this->id = $id;
         $this->name = $name;
         $this->inStock = $inStock;
-        $this->gallery = $gallery;
         $this->description = $description;
-        $this->category = $category;
+        $this->category_id = $category_id;
         $this->attributes = $attributes;
         $this->prices = $prices;
         $this->brand = $brand;
@@ -46,10 +44,7 @@ class Product {
         return $this->inStock;
     }
     
-    public function getGallery(): array
-    {
-        return $this->gallery;
-    }
+    
     
     public function getDescription(): string
     {

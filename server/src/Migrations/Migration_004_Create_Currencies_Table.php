@@ -2,7 +2,7 @@
 
 require_once "Migration.php";
 
-class Migration_003_Create_Currencies_Table extends Migration {
+class Migration_004_Create_Currencies_Table extends Migration {
     
     public function up() {
         try {
@@ -14,7 +14,7 @@ class Migration_003_Create_Currencies_Table extends Migration {
                 );
             ";
             $this->conn->exec($sql);
-            echo "Migration 003 for currencies executed successfully.\n";
+            echo "Migration 004 for currencies executed successfully.\n";
         } catch(PDOException $e) {
             echo "Error executing migration: " . $e->getMessage() . "\n";
         }
@@ -24,7 +24,7 @@ class Migration_003_Create_Currencies_Table extends Migration {
         try {
             $sql = "DROP TABLE IF EXISTS currencies;";
             $this->conn->exec($sql);
-            echo "Rollback migration 003 for currencies executed successfully.\n";
+            echo "Rollback migration 004 for currencies executed successfully.\n";
         } catch(PDOException $e) {
             echo "Error rolling back migration: " . $e->getMessage() . "\n";
         }
