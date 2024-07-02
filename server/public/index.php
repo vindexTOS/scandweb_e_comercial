@@ -1,21 +1,27 @@
 <?php
 
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../config/database.php'; // Adjust the path to your database.php file
 
+  
+ 
+ use FastRoute\Dispatcher;
 use App\Config\Database;
+use App\Controller\GraphQL;
 use FastRoute\RouteCollector;
-use FastRoute\Dispatcher;
-
-// Initialize database connection
+use App\Database\DatabaseContext;
+ 
+ 
+ 
 $database = new Database();
+
 $pdo = $database->getConnection();
+$databaseContext = new DatabaseContext($pdo);
 
 $dispatcher = FastRoute\simpleDispatcher(function(RouteCollector $r) {
-    $r->post('/graphql', [App\Controller\GraphQL::class, 'handle']);
+    $r->post('/graphql', [ GraphQL::class, 'handle']);
 });
 
-// Handle routing
+ 
 $routeInfo = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 
 switch ($routeInfo[0]) {

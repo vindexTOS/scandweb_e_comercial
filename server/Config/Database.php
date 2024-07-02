@@ -1,4 +1,6 @@
 <?php
+
+
 namespace App\Config;
 
 use PDO;
@@ -8,7 +10,7 @@ class Database {
     private $host = "localhost";
     private $db_name = "scandweb";
     private $username = "root";
-    private $password = "";
+    private $password = "258741 ";
     private $conn;
     
     public function __construct() {

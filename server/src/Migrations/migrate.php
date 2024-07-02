@@ -4,12 +4,16 @@ require_once __DIR__ . '/../../config/Database.php';
 $migrations = [
     __DIR__ . DIRECTORY_SEPARATOR . "Migration_001_Create_Categories_Table.php",
     __DIR__ . DIRECTORY_SEPARATOR . "Migration_002_Create_Products_Table.php",
-    __DIR__ . DIRECTORY_SEPARATOR . "Migration_003_Create_Currencies_Table.php",
-    __DIR__ . DIRECTORY_SEPARATOR . "Migration_004_Create_Price_Table.php",
-    
-    
+ 
+    __DIR__ . DIRECTORY_SEPARATOR . "Migration_003_Create_Gallery_Table.php",
+    __DIR__ . DIRECTORY_SEPARATOR . "Migration_004_Create_Currencies_Table.php",
     __DIR__ . DIRECTORY_SEPARATOR . "Migration_005_Create_AttributeSet_Table.php",
     __DIR__ . DIRECTORY_SEPARATOR . "Migration_006_Create_Attribute_Table.php",
+    __DIR__ . DIRECTORY_SEPARATOR . "Migration_007_Create_Price_Table.php",
+ 
+
+    
+ 
     
 ];
 

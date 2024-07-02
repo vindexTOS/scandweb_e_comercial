@@ -7,6 +7,8 @@ use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Schema;
 use GraphQL\Type\SchemaConfig;
+use App\Resolvers\PriceResolver;
+
 use PDO;
 use RuntimeException;
 use Throwable;
@@ -25,7 +27,7 @@ class GraphQL {
             ]);
             
             
-            
+      
             $priceType = new ObjectType([
                 "name" => "Price",
                 "fields"=>[
@@ -35,21 +37,18 @@ class GraphQL {
                     "product_id" => Type::nonNull(Type::int())
                     
                 ],
-            ]);
+            ]);      
             // Define Query Type
             $queryType = new ObjectType([
                 'name' => 'Query',
                 'fields' => [
-                    'echo' => [
-                        'type' => Type::string(),
-                        'args' => [
-                            'message' => ['type' => Type::string()],
-                        ],
-                        'resolve' => static fn ($rootValue, array $args): string => $rootValue['prefix'] . $args['message'],
+                    'getPrices' => [
+                        'type' => Type::listOf($priceType),
+                        'resolve' => [PriceResolver::class, 'getPrices'],
                     ],
                 ],
             ]);
-            
+
             // Define Mutation Type
             $mutationType = new ObjectType([
                 'name' => 'Mutation',
