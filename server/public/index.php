@@ -9,18 +9,19 @@ use App\Config\Database;
 use App\Controller\GraphQL;
 use FastRoute\RouteCollector;
 use App\Database\DatabaseContext;
- 
- 
- 
+use App\Resolvers\PriceResolver;
+
 $database = new Database();
 
 $pdo = $database->getConnection();
 $databaseContext = new DatabaseContext($pdo);
+$priceReslover = new PriceResolver($databaseContext);
+$graphql = new GraphQL($priceResolver);
 
-$dispatcher = FastRoute\simpleDispatcher(function(RouteCollector $r) {
-    $r->post('/graphql', [ GraphQL::class, 'handle']);
+// Assuming you continue with your route setup
+$dispatcher = FastRoute\simpleDispatcher(function(RouteCollector $r) use ($graphql) {
+    $r->post('/graphql', [$graphql, 'handle']);
 });
-
  
 $routeInfo = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 

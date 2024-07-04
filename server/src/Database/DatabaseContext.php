@@ -18,7 +18,8 @@ class DatabaseContext {
         try {
             $stmt = $this->conn->prepare("SELECT * FROM $table");
             $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+           $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return "Hello";
         } catch (PDOException $e) {
             throw new RuntimeException("Failed to fetch data from $table: " . $e->getMessage());
         }

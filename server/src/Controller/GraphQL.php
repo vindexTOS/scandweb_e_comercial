@@ -1,19 +1,24 @@
 <?php
 
 namespace App\Controller;
-
-use GraphQL\GraphQL as GraphQLBase;
-use GraphQL\Type\Definition\ObjectType;
-use GraphQL\Type\Definition\Type;
+ use PDO;
+ 
+use Throwable;
+use RuntimeException;
 use GraphQL\Type\Schema;
+ 
 use GraphQL\Type\SchemaConfig;
 use App\Resolvers\PriceResolver;
-
-use PDO;
-use RuntimeException;
-use Throwable;
+use GraphQL\Type\Definition\Type;
+use GraphQL\GraphQL as GraphQLBase;
+use GraphQL\Type\Definition\ObjectType;
 
 class GraphQL {
+
+        private $priceResolver;
+     public function __construct(PriceResolver $priceResolver){
+        $this->priceResolver = $priceResolver;
+     }
     static public function handle() {
         try {
             // Define Currency Type
@@ -30,25 +35,22 @@ class GraphQL {
       
             $priceType = new ObjectType([
                 "name" => "Price",
-                "fields"=>[
-                    'id' => Type::nonNull(Type::id()),
-                    'amount' => Type::nonNull(Type::int()),
-                    "currency" => Type::nonNull(Type::int()),
-                    "product_id" => Type::nonNull(Type::int())
-                    
+                "fields" => [
+                    'data' => Type::listOf(Type::string()),   
                 ],
             ]);      
-            // Define Query Type
             $queryType = new ObjectType([
                 'name' => 'Query',
                 'fields' => [
                     'getPrices' => [
-                        'type' => Type::listOf($priceType),
-                        'resolve' => [PriceResolver::class, 'getPrices'],
+                        'type' => Type::string(),  // or Type::nonNull(Type::string())
+                        'resolve' => function ($root, $args, $context, $info) {
+                            // Logic to fetch and return prices
+                            return  $this->priceResolver->getPrices() ;  // Replace with actual logic to fetch prices
+                        },
                     ],
                 ],
             ]);
-
             // Define Mutation Type
             $mutationType = new ObjectType([
                 'name' => 'Mutation',
