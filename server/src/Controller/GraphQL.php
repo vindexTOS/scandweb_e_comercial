@@ -8,18 +8,27 @@ use RuntimeException;
 use GraphQL\Type\Schema;
  
 use GraphQL\Type\SchemaConfig;
+ use GraphQL\Type\Definition\Type;
 use App\Resolvers\PriceResolver;
-use GraphQL\Type\Definition\Type;
 use GraphQL\GraphQL as GraphQLBase;
 use GraphQL\Type\Definition\ObjectType;
 
 class GraphQL {
-
-        private $priceResolver;
+ 
+             
+        private  $priceResolver;      
      public function __construct(PriceResolver $priceResolver){
         $this->priceResolver = $priceResolver;
      }
+
+
+
+     public function getTest(){
+        return $this->priceResolver->getPrices();
+    }
+
     static public function handle() {
+
         try {
             // Define Currency Type
             $currencyType = new ObjectType([
@@ -34,19 +43,29 @@ class GraphQL {
             
       
             $priceType = new ObjectType([
-                "name" => "Price",
-                "fields" => [
-                    'data' => Type::listOf(Type::string()),   
+                'name' => 'Price',
+                'fields' => [
+                    'id' => Type::nonNull(Type::id()),
+                    'amount' => Type::nonNull(Type::float()),
+                    'currency' => Type::nonNull(Type::int()),
+                    'product_id' => Type::nonNull(Type::int()),
                 ],
-            ]);      
+            ]);
+
+            // Define Query Type
             $queryType = new ObjectType([
                 'name' => 'Query',
                 'fields' => [
                     'getPrices' => [
-                        'type' => Type::string(),  // or Type::nonNull(Type::string())
+                        'type' => Type::listOf($priceType),
                         'resolve' => function ($root, $args, $context, $info) {
-                            // Logic to fetch and return prices
-                            return  $this->priceResolver->getPrices() ;  // Replace with actual logic to fetch prices
+                            try {
+                                  
+                                return $this->priceResolver->getPrices();
+                            } catch (Throwable $e) {
+                                error_log($e->getMessage());
+                                return null;
+                            }
                         },
                     ],
                 ],
@@ -105,12 +124,12 @@ class GraphQL {
                         ]
                     ],
                 ]);
+
                 
                 // Create the Schema
                 $schema = new Schema(
                     (new SchemaConfig())
                     ->setQuery($queryType)
-                    ->setMutation($mutationType)
                 );
                 
                 // Handle the GraphQL request
