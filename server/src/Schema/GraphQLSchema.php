@@ -2,6 +2,7 @@
 
 namespace App\Schema;
 
+use Throwable;
 use App\Types\GraphQLTypes;
 use App\Resolvers\PriceResolver;
 use GraphQL\Type\Definition\Type;
@@ -24,13 +25,19 @@ class GraphQLSchema {
     
     private static function getQueryType(): ObjectType
     {
-        return new ObjectType([
+        return  new ObjectType([
             'name' => 'Query',
             'fields' => [
                 'getPrices' => [
                     'type' => Type::listOf(GraphQLTypes::getPriceType()),
                     'resolve' => function ($root, $args, $context, $info) {
-                        return [PriceResolver::class, 'getPrices'];
+                        try {
+                            return $context['priceResolver']->getPrices();
+                        } catch (Throwable $e) {
+                            
+                            error_log('Error in resolver: ' . $e->getMessage());
+                            return null;  
+                        }
                     },
                 ],
             ],
