@@ -4,7 +4,7 @@ namespace App\Models\PriceModels;
 
 use PDOException;
 use RuntimeException;
-use App\Models\Currency;
+use App\Models\CurrencyModels\Currency;
 use App\Database\DatabaseContext;
 
 class Price 

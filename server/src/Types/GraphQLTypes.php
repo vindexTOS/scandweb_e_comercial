@@ -26,4 +26,17 @@ class GraphQLTypes {
         ]);
     }
     
+    public static function getCurrency():ObjectType {
+        
+        return new ObjectType([
+            'name' => 'Price',
+            'fields' => [
+                'id' => Type::nonNull(Type::id()),
+                'label' => Type::nonNull(Type::string()),
+                'symbol' => Type::nonNull(Type::string()),
+                
+            ],
+        ]);
+    }
+    
 }

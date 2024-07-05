@@ -1,13 +1,13 @@
 <?php
-namespace App\Models;
+namespace App\Models\CurrencyModels;
 
 class Currency
 {
     private int $id;
-    private  string $label;
-    private  string $symbol;
+    private string $label;
+    private string $symbol;
     
-    public function __construct( string $label,  string $symbol, int $id)
+    public function __construct(string $label, string $symbol, int $id)
     {   
         $this->id = $id;
         $this->label = $label;

@@ -5,7 +5,6 @@ use Throwable;
 use RuntimeException;
 use GraphQL\Type\Schema;
 use App\Types\GraphQLTypes;
-use App\Schema\GraphQLSchema;
 use GraphQL\Type\SchemaConfig;
 use App\Resolvers\PriceResolver;
 use GraphQL\Type\Definition\Type;
@@ -26,31 +25,29 @@ class GraphQL {
     public function handle() {
         try {
             
-            //   $schema = GraphQLSchema::build();
-            // // Define Query Type
-            // $queryType = new ObjectType([
-            //     'name' => 'Query',
-            //     'fields' => [
-            //         'getPrices' => [
-            //             'type' => Type::listOf(GraphQLTypes::getPriceType()),
-            //             'resolve' => function ($root, $args, $context, $info) {
-            //                 try {
             
-            
-            
-            //                     return $context['priceResolver']->getPrices();
-            //                 } catch (Throwable $e) {
-            
-            //                     error_log('Error in resolver: ' . $e->getMessage());
-            //                     return null; // Return null or handle error as appropriate
-            //                 }
-            //             },
-            //         ],
-            //     ],
-            // ]);
+            // Define Query Type
+            $queryType = new ObjectType([
+                'name' => 'Query',
+                'fields' => [
+                    'getPrices' => [
+                        'type' => Type::listOf(GraphQLTypes::getPriceType()),
+                        'resolve' => function ($root, $args, $context, $info) {
+                            try {
+                                return $context['priceResolver']->getPrices();
+                            } catch (Throwable $e) {
+                                error_log('Error in resolver: ' . $e->getMessage());
+                                return null;
+                            }
+                        },
+                    ],
+                ],
+            ]);
             
             // Create the Schema
-            $schema = GraphQLSchema::build();
+            $schema = new Schema(
+                (new SchemaConfig())->setQuery($queryType)
+            );
             
             // Handle the GraphQL request
             $rawInput = file_get_contents('php://input');

@@ -1,5 +1,5 @@
 <?php
-namespace App\Models;
+namespace App\Models\AttributeModels;
 
 
 class AttributeSet
@@ -33,8 +33,8 @@ class AttributeSet
         return $this->type;
     }
     
-    public function getItems(): array
-    {
-        return $this->items;
-    }
+    // public function getItems(): array
+    // {
+    //     return $this->items;
+    // }
 }
