@@ -12,7 +12,7 @@ class Migration_007_Create_Price_Table extends Migration {
                     currency INT,
                     product_id INT,
                     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
-                    FOREIGN KEY (currency) REFERENCES currencies(id) ON DELETE CASCADE
+                    FOREIGN KEY (currency_id) REFERENCES currencies(id) ON DELETE CASCADE
                 );
             ";
             $this->conn->exec($sql);
