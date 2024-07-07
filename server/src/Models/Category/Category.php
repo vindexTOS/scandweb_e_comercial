@@ -1,5 +1,5 @@
 <?php
-namespace App\Models\CategoryModels;
+namespace App\Models\Category;
 
 
 

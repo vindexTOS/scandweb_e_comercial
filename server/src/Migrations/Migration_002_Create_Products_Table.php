@@ -1,13 +1,15 @@
 <?php
 
-require_once "Migration.php";
+use App\Migrations\Migration;
 
+ 
 class Migration_002_Create_Products_Table extends Migration {
     public function up() {
         try {
             $sql = "
                 CREATE TABLE products (
                     id INT AUTO_INCREMENT PRIMARY KEY,
+                    graphqlId VARCHAR(225) UNIQUE,
                     name VARCHAR(255) NOT NULL,
                     inStock BOOLEAN,
                     description TEXT,

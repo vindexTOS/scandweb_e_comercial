@@ -1,7 +1,8 @@
 <?php
 
-require_once "Migration.php";
+use App\Migrations\Migration;
 
+ 
 class Migration_004_Create_Currencies_Table extends Migration {
     
     public function up() {

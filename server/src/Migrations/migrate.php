@@ -1,15 +1,17 @@
 <?php
-require_once __DIR__ . '/../../config/Database.php';
+require 'vendor/autoload.php';
 
-$migrations = [
+use App\Config\Database;
+require_once __DIR__ . '/../../Config/Database.php';
+
+   $migrations = [
     __DIR__ . DIRECTORY_SEPARATOR . "Migration_001_Create_Categories_Table.php",
     __DIR__ . DIRECTORY_SEPARATOR . "Migration_002_Create_Products_Table.php",
  
     __DIR__ . DIRECTORY_SEPARATOR . "Migration_003_Create_Gallery_Table.php",
     __DIR__ . DIRECTORY_SEPARATOR . "Migration_004_Create_Currencies_Table.php",
-    __DIR__ . DIRECTORY_SEPARATOR . "Migration_005_Create_AttributeSet_Table.php",
-    __DIR__ . DIRECTORY_SEPARATOR . "Migration_006_Create_Attribute_Table.php",
-    __DIR__ . DIRECTORY_SEPARATOR . "Migration_007_Create_Price_Table.php",
+     __DIR__ . DIRECTORY_SEPARATOR . "Migration_005_Create_Attribute_Table.php",
+    __DIR__ . DIRECTORY_SEPARATOR . "Migration_006_Create_Price_Table.php",
  
 
     
@@ -18,7 +20,7 @@ $migrations = [
 ];
 
 try {
-    $database = new \App\Config\Database();
+    $database = new Database();
     $conn = $database->getConnection();
     
     foreach ($migrations as $migrationFile) {

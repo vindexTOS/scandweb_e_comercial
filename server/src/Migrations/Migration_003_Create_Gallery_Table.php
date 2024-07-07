@@ -1,6 +1,7 @@
 <?php
-require_once "Migration.php";
 
+use App\Migrations\Migration;
+ 
 
 class Migration_003_Create_Gallery_Table extends Migration {
     

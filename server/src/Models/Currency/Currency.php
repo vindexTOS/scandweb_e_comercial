@@ -1,5 +1,5 @@
 <?php
-namespace App\Models\CurrencyModels;
+namespace App\Models\Currency;
 
 class Currency
 {

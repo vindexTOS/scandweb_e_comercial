@@ -1,30 +1,29 @@
 <?php
 
-namespace App\Models\PriceModels;
+namespace App\Models\Price;
 
 use PDOException;
 use RuntimeException;
-use App\Models\CurrencyModels\Currency;
-use App\Database\DatabaseContext;
-
+ use App\Database\DatabaseContext;
+use App\Models\Currency\Currency;
 class Price 
 {
+    private int $id;
     private float $amount;
     private Currency $currency;
-    private int $product_id;
+     
     
     
     
     
     
     
-    
-    public function __construct(float $amount, Currency $currency, int $product_id)
+    public function __construct(float $amount, Currency $currency, int $id )
     {
         $this->amount = $amount;
         $this->currency = $currency;
-        $this->product_id = $product_id;
-    }
+        $this->id = $id;
+     }
     
     
     

@@ -1,5 +1,7 @@
 <?php
-namespace App\Models\AttributeModels;
+namespace App\Models\Attribute;
+
+use App\Models\Attribute\Attribute;
 
 
 class AttributeSet
@@ -7,8 +9,7 @@ class AttributeSet
     private int $id;
     private string $name;
     private string $type;
-    
-    
+    private Attribute $attributes;
     public function __construct(int $id, string $name, string $type )
     {
         $this->id = $id;

@@ -1,6 +1,8 @@
 <?php
 
-require_once 'Migration.php';
+use App\Migrations\Migration;
+
+ 
 
 class Migration_001_Create_Categories_Table extends Migration {
     
