@@ -1,13 +1,15 @@
 <?php
 
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../Config/Database.php';
+
+use App\Config\Database;
 
 use FastRoute\Dispatcher;
-use App\Config\Database;
 use App\Controller\GraphQL;
 use FastRoute\RouteCollector;
-use App\Database\DatabaseContext;
 use App\Resolvers\PriceResolver;
+use App\Database\DatabaseContext;
 
 $database = new Database();
 $pdo = $database->getConnection();
