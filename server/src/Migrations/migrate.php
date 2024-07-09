@@ -1,21 +1,23 @@
 <?php
-require 'vendor/autoload.php';
 
 use App\Config\Database;
+// require 'vendor/autoload.php';   // linxu sverison 
+require_once __DIR__ . '/../../vendor/autoload.php';
+
 require_once __DIR__ . '/../../Config/Database.php';
 
-   $migrations = [
+$migrations = [
     __DIR__ . DIRECTORY_SEPARATOR . "Migration_001_Create_Categories_Table.php",
     __DIR__ . DIRECTORY_SEPARATOR . "Migration_002_Create_Products_Table.php",
- 
+    
     __DIR__ . DIRECTORY_SEPARATOR . "Migration_003_Create_Gallery_Table.php",
     __DIR__ . DIRECTORY_SEPARATOR . "Migration_004_Create_Currencies_Table.php",
-     __DIR__ . DIRECTORY_SEPARATOR . "Migration_005_Create_Attribute_Table.php",
+    __DIR__ . DIRECTORY_SEPARATOR . "Migration_005_Create_Attribute_Table.php",
     __DIR__ . DIRECTORY_SEPARATOR . "Migration_006_Create_Price_Table.php",
- 
-
     
- 
+    
+    
+    
     
 ];
 

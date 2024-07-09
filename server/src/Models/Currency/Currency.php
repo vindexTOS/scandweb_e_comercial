@@ -3,13 +3,11 @@ namespace App\Models\Currency;
 
 class Currency
 {
-    private int $id;
     private string $label;
     private string $symbol;
     
-    public function __construct(string $label, string $symbol, int $id)
+    public function __construct(string $label, string $symbol,  )
     {   
-        $this->id = $id;
         $this->label = $label;
         $this->symbol = $symbol;
         
@@ -24,7 +22,5 @@ class Currency
     {
         return $this->symbol;
     }
-    public function getId():int {
-        return $this->id;
-    }
+    
 }

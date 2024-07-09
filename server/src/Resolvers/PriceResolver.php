@@ -8,8 +8,10 @@ namespace App\Resolvers;
 use Error;
 use PDOException;
 use RuntimeException;
+use App\Models\Price\Price;
+
+use App\Models\Product\Product;
 use App\Database\DatabaseContext;
-use App\Models\PriceModels\Price;
 use GraphQL\Type\Definition\ResolveInfo;
 
 class PriceResolver {
@@ -31,5 +33,15 @@ class PriceResolver {
     }
   }
   
+  
+  public function getProducst(){
+    try {
+      return Product::getAllProducts($this->dbContext);
+    } catch (\Exception $e) {
+      var_dump($e);
+      throw new Error('Failed to fetch prices: ' . $e->getMessage());
+      
+    }
+  }
 }
 ?>

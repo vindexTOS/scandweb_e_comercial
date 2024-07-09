@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use Error;
 use Throwable;
 use RuntimeException;
 use GraphQL\Type\Schema;
@@ -19,7 +20,15 @@ class GraphQL {
     }
     
     public function getTest() {
-        return $this->priceResolver->getPrices();
+        try {
+            return $this->priceResolver->getProducst();
+            
+        } catch (\Exception $e) {
+            var_dump($e);
+            echo "ERROR 500";
+            throw new Error('Failed to fetch prices: ' . $e->getMessage());
+            
+        }
     }
     
     public function handle() {

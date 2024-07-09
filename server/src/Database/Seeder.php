@@ -1,6 +1,8 @@
 <?php
 
-require 'vendor/autoload.php';
+// require 'vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
+
 
 use App\Config\Database;
 require_once __DIR__ . '/../../Config/Database.php';
@@ -10,13 +12,13 @@ use Faker\Factory as Faker;
 class Seeder {
     private $conn;
     private $faker;
-
+    
     public function __construct() {
         $database = new Database();
         $this->conn = $database->getConnection();
         $this->faker = Faker::create();
     }
-
+    
     public function seedCategories($count = 10) {
         for ($i = 0; $i < $count; $i++) {
             $sql = "INSERT INTO categories (name) VALUES (:name)";
@@ -27,7 +29,7 @@ class Seeder {
         }
     }
     
-
+    
     public function seedProducts($count = 10) {
         for ($i = 0; $i < $count; $i++) {
             $sql = "INSERT INTO products (name,graphqlId, inStock, description, category, brand) VALUES (:name,:graphqlId,:inStock, :description, :category, :brand)";
@@ -42,66 +44,67 @@ class Seeder {
             ]);
         }
     }
- public function seedAttrabutes($count = 10){
-    for($i = 0; $i < $count;$i++){
-
-    $sql = "INSERT INTO attribute (displayValue, value , product_id) VALUES (:displayValue, :value , :product_id)";
-    $stmt = $this->conn->prepare($sql);
-    $stmt->execute([
-        "displayValue"=>$this->faker->word,
-        "value"=>$this->faker->word,
-        "product_id"=>$this->faker->numberBetween(1, 2)
-    ]);};
- }
-
-  public function seedGallery($count = 10){
-     for($i = 0; $i < $count;$i++){
-        $sql = "INSERT INTO gallery  (url, product_id) VALUES (:url ,:product_id)";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute([
-            "url"=>"https://cdn.shopify.com/s/files/1/0087/6193/3920/products/DD1381200_DEOA_2_720x.jpg?v=1612816087",
-            "product_id"=>$this->faker->numberBetween(1, 2)
-
-        ]);
-     }
-  }
-
-  public function seedCurrency($count  = 10 ){
-    for($i = 0; $i < $count;$i ++){
-         $sql = "INSERT INTO currencies (label, symbol) VALUES (:label, :symbol)";
-         $stmt = $this->conn->prepare($sql);
-         $stmt->execute([ 
-            "label"=> $this->faker->word,
-            "symbol"=>$this->faker->word,
- 
-         ]);
-    }
-  }
-
-    public function seedPrice($count = 10){
-
-        for($i = 0; $i < $count ; $i ++){
-            $sql = 'INSERT INTO prices (amount , currency_id , product_id) VALUES (:amount, :currency_id,:product_id)';
-
+    public function seedAttrabutes($count = 10){
+        for($i = 0; $i < $count;$i++){
+            
+            $sql = "INSERT INTO attribute (displayValue, value , product_id) VALUES (:displayValue, :value , :product_id)";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute([
-                "amount"=>$this->faker->numberBetween(1, 10),  
-                  "currency_id"=>$this->faker->numberBetween(1, 2),  
-                  "product_id"=>$this->faker->numberBetween(1, 2)
-            ]);
+                "displayValue"=>$this->faker->word,
+                "value"=>$this->faker->word,
+                "product_id"=>$this->faker->numberBetween(1, 2)
+            ]);};
+        }
+        
+        public function seedGallery($count = 10){
+            for($i = 0; $i < $count;$i++){
+                $sql = "INSERT INTO gallery  (url, product_id) VALUES (:url ,:product_id)";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->execute([
+                    "url"=>"https://cdn.shopify.com/s/files/1/0087/6193/3920/products/DD1381200_DEOA_2_720x.jpg?v=1612816087",
+                    "product_id"=>$this->faker->numberBetween(1, 2)
+                    
+                ]);
+            }
+        }
+        
+        public function seedCurrency($count  = 10 ){
+            for($i = 0; $i < $count;$i ++){
+                $sql = "INSERT INTO currencies (label, symbol) VALUES (:label, :symbol)";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->execute([ 
+                    "label"=> $this->faker->word,
+                    "symbol"=>$this->faker->word,
+                    
+                ]);
+            }
+        }
+        
+        public function seedPrice($count = 10){
+            
+            for($i = 0; $i < $count ; $i ++){
+                $sql = 'INSERT INTO prices (amount , currency_id , product_id) VALUES (:amount, :currency_id,:product_id)';
+                
+                $stmt = $this->conn->prepare($sql);
+                $stmt->execute([
+                    "amount"=>$this->faker->numberBetween(1, 10),  
+                    "currency_id"=>$this->faker->numberBetween(1, 2),  
+                    "product_id"=>$this->faker->numberBetween(1, 2)
+                ]);
+            }
+        }
+        
+        public function seed() {
+            $this->seedCategories();
+            $this->seedProducts();
+            $this->seedCurrency();    
+            $this->seedAttrabutes();
+            $this->seedGallery();
+            $this->seedPrice();
+            echo "SEEDING HAS BEEN COMPLITED...";
         }
     }
-
-    public function seed() {
-        $this->seedCategories();
-        $this->seedProducts();
-        $this->seedCurrency();    
-        $this->seedAttrabutes();
-        $this->seedGallery();
-        $this->seedPrice();
-    }
-}
-
- $seeder = new Seeder();
-$seeder->seed();
-?>
+    
+    $seeder = new Seeder();
+    $seeder->seed();
+    ?>

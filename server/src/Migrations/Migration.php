@@ -2,7 +2,7 @@
 
 // require_once __DIR__ . '/../../Config/Database.php';
 namespace App\Migrations;
-require 'vendor/autoload.php';
+// require 'vendor/autoload.php';
 
 
 use PDO;
