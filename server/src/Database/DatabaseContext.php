@@ -24,14 +24,13 @@ class DatabaseContext {
             throw new RuntimeException("Failed to execute query: " . $e->getMessage());
         }
     }
-    public function getSingleById(string $table, string $id): array {
+    public function getSingle(string $query, array $params = []): ?array {
         try {
-            $stmt = $this->conn->prepare("SELECT * FROM $table WHERE id = :id");
-            $stmt->bindParam(':id', $id);
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute($params);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            throw new RuntimeException("Failed to fetch data from $table: " . $e->getMessage());
+            throw new RuntimeException("Failed to fetch single row: " . $e->getMessage());
         }
     }
     

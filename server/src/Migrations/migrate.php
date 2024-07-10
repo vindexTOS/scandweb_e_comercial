@@ -14,6 +14,7 @@ $migrations = [
     __DIR__ . DIRECTORY_SEPARATOR . "Migration_004_Create_Currencies_Table.php",
     __DIR__ . DIRECTORY_SEPARATOR . "Migration_005_Create_Attribute_Table.php",
     __DIR__ . DIRECTORY_SEPARATOR . "Migration_006_Create_Price_Table.php",
+    __DIR__ . DIRECTORY_SEPARATOR . "Migration_007_Create_Attribute_Set_Table.php",
     
     
     

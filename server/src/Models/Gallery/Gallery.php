@@ -1,7 +1,9 @@
 <?php
 namespace App\Models\Gallery;
 
-
+use PDOException;
+use RuntimeException;
+use App\Database\DatabaseContext;
 
 class Gallery {
     
@@ -15,14 +17,24 @@ class Gallery {
         $this->product_id = $product_id;
     }
     
-    public function getUrl():string 
-    {
+    public static function getGalleryWithProductId(DatabaseContext $dbContext, int $productId = null) {
+        try {
+            $query = "SELECT * FROM gallery WHERE product_id = :productId";
+            $galleryData = $dbContext->getAll($query, [':productId' => $productId]);
+            
+            $gallery = [];
+            foreach ($galleryData as $data) {
+                $gallery[] = new self($data['url'], $data['product_id']);
+            }
+            
+            return $gallery;
+        } catch (PDOException $e) {
+            throw new RuntimeException("Failed to fetch gallery: " . $e->getMessage());
+        }
+    }
+    public function getUrl(): string {
         return $this->url;
     }
     
-    public function getProductId():int
-    {
-        return $this->product_id;
-    }
     
 }

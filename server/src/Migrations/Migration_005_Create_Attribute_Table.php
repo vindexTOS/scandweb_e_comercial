@@ -2,20 +2,23 @@
 
 use App\Migrations\Migration;
 
- 
+
 class Migration_005_Create_Attribute_Table extends Migration {
     
     public function up() {
         try {
-            $sql = "
-                CREATE TABLE attribute (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    displayValue VARCHAR(255) NOT NULL,
-                    value VARCHAR(255) NOT NULL,
-                    product_id INT,
-                    FOREIGN KEY (product_id) REFERENCES products(id)
-                );
-            ";
+            
+            
+            
+            $sql = "CREATE TABLE attribute (
+            id INT AUTO_INCREMENT PRIMARY KEY ,
+            name VARCHAR(225) NOT NULL,
+            type VARCHAR(225) NOT NULL ,
+              product_id INT,
+            FOREIGN KEY (product_id) REFERENCES products(id)
+            );";
+            
+            
             
             $this->conn->exec($sql);
             

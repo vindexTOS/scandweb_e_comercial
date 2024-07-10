@@ -13,14 +13,12 @@ class Currency
         
     }
     
-    public function getLabel(): string
+    public function toArray(): array
     {
-        return $this->label;
+        return [
+            'label' => $this->label,
+            'symbol' => $this->symbol,
+            '__typename' => 'Currency'
+        ];
     }
-    
-    public function getSymbol(): string
-    {
-        return $this->symbol;
-    }
-    
 }

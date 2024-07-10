@@ -20,8 +20,8 @@ class Price
     }
     
     
-    
-    public static function getAllPrices(DatabaseContext $dbContext, int $productId = null): array {
+    public static function getAllPrices(DatabaseContext $dbContext, int $productId = null): array 
+    {
         try {
             $query = "
                 SELECT 
@@ -39,14 +39,24 @@ class Price
             
             $prices = [];
             foreach ($pricesData as $priceData) {
-                $currency = new Currency(  $priceData['currency_label'], $priceData['currency_symbol']);
-                $prices[] = new Price($priceData['amount'], $currency, $priceData['product_id']);
+                $currency = new Currency($priceData['currency_label'], $priceData['currency_symbol']);
+                $prices[] = new self($priceData['amount'], $currency, $priceData['product_id']);
             }
             
             return $prices;
         } catch (PDOException $e) {
             throw new RuntimeException("Failed to fetch prices: " . $e->getMessage());
         }
+    }
+    
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'amount' => $this->amount,
+            'currency' => array_merge($this->currency->toArray(), ['__typename' => 'Currency']),
+            '__typename' => 'Price'
+        ];
     }
     
 }

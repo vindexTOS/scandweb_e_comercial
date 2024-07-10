@@ -36,7 +36,9 @@ class PriceResolver {
   
   public function getProducst(){
     try {
-      return Product::getAllProducts($this->dbContext);
+      return json_encode(Product::getAllProducts($this->dbContext));
+      
+      
     } catch (\Exception $e) {
       var_dump($e);
       throw new Error('Failed to fetch prices: ' . $e->getMessage());
