@@ -8,14 +8,17 @@ use App\Config\Database;
 use FastRoute\Dispatcher;
 use App\Controller\GraphQL;
 use FastRoute\RouteCollector;
-use App\Resolvers\PriceResolver;
+
 use App\Database\DatabaseContext;
+use App\Resolvers\ProductResolver;
+use App\Resolvers\CategoriesResolver;
 
 $database = new Database();
 $pdo = $database->getConnection();
 $databaseContext = new DatabaseContext($pdo);
-$priceResolver = new PriceResolver($databaseContext);
-$graphql = new GraphQL($priceResolver);
+$productResolver= new ProductResolver($databaseContext);
+$categoriesReslover = new CategoriesResolver($databaseContext);
+$graphql = new GraphQL($productResolver, $categoriesReslover );
 
 // Assuming you continue with your route setup
 $dispatcher = FastRoute\simpleDispatcher(function(RouteCollector $r) use ($graphql) {

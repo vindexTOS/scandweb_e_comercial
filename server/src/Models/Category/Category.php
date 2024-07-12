@@ -29,6 +29,31 @@ class Category {
             throw new RuntimeException("Failed to fetch category: " . $e->getMessage());
         }
     }
+    
+    
+    public static function getAllCategories (DatabaseContext $dbContext){
+        
+        try {
+            $query = "SELECT * FROM categories";
+            
+            $allCategories = $dbContext->getAll($query);
+            $categories = [];
+            foreach($allCategories as $categoryData){
+                $category = new self($categoryData['id'], $categoryData['name']);
+                
+                $categories[] = [
+                    "id" => $category->getId(),
+                    "name" => $category->getName()
+                ];
+            }
+            header('Content-Type: application/json');
+            
+            return  $categories;
+        } catch (PDOException $e) {
+            throw new RuntimeException("Failed to fetch category: " . $e->getMessage());
+            
+        }
+    }
     public function getId(): int {
         return $this->id;
     }

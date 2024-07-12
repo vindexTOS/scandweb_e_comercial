@@ -7,22 +7,25 @@ use RuntimeException;
 use GraphQL\Type\Schema;
 use App\Types\GraphQLTypes;
 use GraphQL\Type\SchemaConfig;
-use App\Resolvers\PriceResolver;
+
 use GraphQL\Type\Definition\Type;
+use App\Resolvers\ProductResolver;
 use GraphQL\GraphQL as GraphQLBase;
+use App\Resolvers\CategoriesResolver;
 use GraphQL\Type\Definition\ObjectType;
 
 class GraphQL {
-    private $priceResolver;
-    
-    public function __construct(PriceResolver $priceResolver) {
-        $this->priceResolver = $priceResolver;
+    private $productResolver;
+    private $categoriesReslover; 
+    public function __construct(ProductResolver $productResolver,CategoriesResolver $categoriesReslover) {
+        $this->productResolver =$productResolver;
+        $this->categoriesReslover = $categoriesReslover;
     }
     
     public function getTest() {
         try {
-            return $this->priceResolver->getProducst();
-            
+            // return $this->priceResolver->getProducst();
+            return $this->categoriesReslover->getCategories();
         } catch (\Exception $e) {
             var_dump($e);
             echo "ERROR 500";
@@ -69,7 +72,7 @@ class GraphQL {
             $variableValues = $input['variables'] ?? null;
             
             $rootValue = ['prefix' => 'You said: '];
-            $context = ['priceResolver' => $this->priceResolver];
+            $context = ['priceResolver' => $this->productResolver];
             $result = GraphQLBase::executeQuery($schema, $query, $rootValue, $context, $variableValues);
             $output = $result->toArray();
         } catch (Throwable $e) {
