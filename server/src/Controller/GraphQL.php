@@ -24,8 +24,8 @@ class GraphQL {
     
     public function getTest() {
         try {
-            // return $this->priceResolver->getProducst();
-            return $this->categoriesReslover->getCategories();
+            return $this->productResolver->getProducts();
+            // return $this->categoriesReslover->getCategories();
         } catch (\Exception $e) {
             var_dump($e);
             echo "ERROR 500";
@@ -42,11 +42,11 @@ class GraphQL {
             $queryType = new ObjectType([
                 'name' => 'Query',
                 'fields' => [
-                    'getPrices' => [
-                        'type' => Type::listOf(GraphQLTypes::getPriceType()),
+                    'getProducts' => [
+                        'type' => Type::listOf(GraphQLTypes::getProductType()),
                         'resolve' => function ($root, $args, $context, $info) {
                             try {
-                                return $context['priceResolver']->getPrices();
+                                return $context['priceResolver']->getProducts();
                             } catch (Throwable $e) {
                                 error_log('Error in resolver: ' . $e->getMessage());
                                 return null;
