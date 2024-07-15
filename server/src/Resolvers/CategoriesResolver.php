@@ -20,7 +20,7 @@ class CategoriesResolver {
     
     public function getCategories(){
         try {
-            return json_encode(Category::getAllCategories($this->dbContext));
+            return  Category::getAllCategories($this->dbContext) ;
         } catch (\Throwable $e) {
             throw new Error('Failed to fetch categories: ' . $e->getMessage());
             

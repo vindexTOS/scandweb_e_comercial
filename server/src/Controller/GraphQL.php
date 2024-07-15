@@ -12,9 +12,10 @@ use GraphQL\Type\Definition\Type;
 use App\Resolvers\ProductResolver;
 use GraphQL\GraphQL as GraphQLBase;
 use App\Resolvers\CategoriesResolver;
+use App\Schema\GraphQLSchema;
 use GraphQL\Type\Definition\ObjectType;
 
-class GraphQL {
+class GraphQL extends GraphQLSchema {
     private $productResolver;
     private $categoriesReslover; 
     public function __construct(ProductResolver $productResolver,CategoriesResolver $categoriesReslover) {
@@ -24,8 +25,8 @@ class GraphQL {
     
     public function getTest() {
         try {
-            return $this->productResolver->getProducts();
-            // return $this->categoriesReslover->getCategories();
+            // return $this->productResolver->getProducts();
+            return $this->categoriesReslover->getCategories();
         } catch (\Exception $e) {
             var_dump($e);
             echo "ERROR 500";
@@ -38,28 +39,11 @@ class GraphQL {
         try {
             
             
-            // Define Query Type
-            $queryType = new ObjectType([
-                'name' => 'Query',
-                'fields' => [
-                    'getProducts' => [
-                        'type' => Type::listOf(GraphQLTypes::getProductType()),
-                        'resolve' => function ($root, $args, $context, $info) {
-                            try {
-                                return $context['priceResolver']->getProducts();
-                            } catch (Throwable $e) {
-                                error_log('Error in resolver: ' . $e->getMessage());
-                                return null;
-                            }
-                        },
-                    ],
-                ],
-            ]);
             
-            // Create the Schema
-            $schema = new Schema(
-                (new SchemaConfig())->setQuery($queryType)
-            );
+            
+            $schema = new Schema([
+                'query' =>  $this->getQueryType(  ),
+            ]);
             
             // Handle the GraphQL request
             $rawInput = file_get_contents('php://input');
@@ -72,8 +56,10 @@ class GraphQL {
             $variableValues = $input['variables'] ?? null;
             
             $rootValue = ['prefix' => 'You said: '];
-            $context = ['priceResolver' => $this->productResolver];
-            $result = GraphQLBase::executeQuery($schema, $query, $rootValue, $context, $variableValues);
+            $context = [
+                'productResolver' => $this->productResolver,
+                'categoriesReslover' => $this->categoriesReslover,
+            ];            $result = GraphQLBase::executeQuery($schema, $query, $rootValue, $context, $variableValues);
             $output = $result->toArray();
         } catch (Throwable $e) {
             error_log('Error handling GraphQL request: ' . $e->getMessage());

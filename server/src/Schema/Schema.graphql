@@ -1,0 +1,28 @@
+query GetProducts {
+  getProducts {
+    id
+    name
+    inStock
+    gallery
+    description
+    category
+    attributes {
+      id
+      name
+      type
+      items {
+        id
+        displayValue
+        value
+      }
+    }
+    prices {
+      id
+      amount
+      currency {
+        label
+        symbol
+      }
+    }
+  }
+}

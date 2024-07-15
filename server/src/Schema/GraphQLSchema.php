@@ -7,21 +7,21 @@ use App\Types\GraphQLTypes;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Definition\ObjectType;
 
-class GraphQLSchema { 
+class GraphQLSchema extends GraphQLTypes { 
     public static function build(): \GraphQL\Type\Schema {
         $queryType = self::getQueryType();
-
+        
         return new \GraphQL\Type\Schema([
             'query' => $queryType,
         ]);
     }
-
-    private static function getQueryType(): ObjectType {
+    
+    protected function getQueryType(): ObjectType {
         return new ObjectType([
             'name' => 'Query',
             'fields' => [
                 'getProducts' => [
-                    'type' => Type::listOf(GraphQLTypes::getProductType()),
+                    'type' => Type::listOf($this->getProductType()),
                     'resolve' => function ($root, $args, $context, $info) {
                         try {
                             return $context['productResolver']->getProducts();
@@ -31,7 +31,19 @@ class GraphQLSchema {
                         }
                     },
                 ],
-            ],
-        ]);
+                
+                "getCategories" => [ 
+                    "type"=> Type::listOf($this->getCategoryType()),
+                    "resolve"=> function ($root,$args,$context,$info){
+                        try {
+                            return $context['categoriesReslover']->getCategories();
+                        } catch (Throwable $e) {
+                            error_log('Error in resolver: ' . $e->getMessage());
+                            return null;
+                        }
+                    }
+                    ]
+                ],
+            ]);
+        }
     }
-}
