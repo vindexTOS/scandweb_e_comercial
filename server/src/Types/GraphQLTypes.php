@@ -100,7 +100,7 @@ class GraphQLTypes {
                     return new ObjectType([
                         "name"=>"all-data",
                         'fields'=>[
-                            'categories' =>  $this->getCategoryType(),
+                            'categories' =>$this->getCategoryType(),
                             "products"=>$this->getProductType()
                             ] 
                         ]);
