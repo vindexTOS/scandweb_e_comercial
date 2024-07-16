@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import "./App.css";
-import Robika from "./components/Robika";
+import { Routes, Route, Router } from "react-router-dom";
+import Layout from "./Layout";
+import Home from "./pages/Home";
 
 interface AppState {
   message: string;
@@ -16,12 +17,11 @@ class App extends Component<{}, AppState> {
 
   render() {
     return (
-      <div className="App">
-        <Robika />
-        <header className="App-header">
-          <p>{this.state.message}</p>
-        </header>
-      </div>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route path="home" element={<Home />} />
+        </Route>
+      </Routes>
     );
   }
 }
