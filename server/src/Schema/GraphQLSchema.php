@@ -20,7 +20,7 @@ class GraphQLSchema extends GraphQLTypes {
         return new ObjectType([
             'name' => 'Query',
             'fields' => [
-                'getProducts' => [
+                'products' => [
                     'type' => Type::listOf($this->getProductType()),
                     'resolve' => function ($root, $args, $context, $info) {
                         try {
@@ -32,7 +32,7 @@ class GraphQLSchema extends GraphQLTypes {
                     },
                 ],
                 
-                "getCategories" => [ 
+                "categories" => [ 
                     "type"=> Type::listOf($this->getCategoryType()),
                     "resolve"=> function ($root,$args,$context,$info){
                         try {

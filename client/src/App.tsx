@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { Routes, Route, Router } from "react-router-dom";
+import { Routes, Route, Router, Navigate } from "react-router-dom";
 import Layout from "./Layout";
-import Home from "./pages/Home";
+import Home from "./Pages/Home";
 
 interface AppState {
   message: string;
@@ -19,7 +19,7 @@ class App extends Component<{}, AppState> {
     return (
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route path="home" element={<Home />} />
+          <Route path="" element={<Home />} />
         </Route>
       </Routes>
     );
