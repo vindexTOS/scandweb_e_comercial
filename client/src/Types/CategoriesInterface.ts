@@ -8,4 +8,5 @@ export interface CategoriesState {
   navItems: Category[];
   loading: boolean;
   error: string | null;
+  currentCategory: string;
 }

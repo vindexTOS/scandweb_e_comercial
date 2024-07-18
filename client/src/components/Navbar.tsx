@@ -71,7 +71,7 @@ class Navbar extends Component<NavbarProps> {
   }
 
   private styles = {
-    nav: "h-[80px] w-[100%] flex items-center  justify-between px-20 ",
+    nav: "h-[80px] w-[100%] flex items-center  justify-between px-[8rem] ",
     navLinks: "flex justify-between  gap-10 ",
   };
 }

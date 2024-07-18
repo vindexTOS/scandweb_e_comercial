@@ -6,12 +6,17 @@ const initialState: CategoriesState = {
   navItems: [],
   loading: false,
   error: null,
+  currentCategory: "all",
 };
 
 const categoriesSlice = createSlice({
   name: "categories",
   initialState,
-  reducers: {},
+  reducers: {
+    getCategory: (state, action) => {
+      return { ...state, currentCategory: action.payload };
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchCategories.pending, (state) => {
@@ -30,3 +35,4 @@ const categoriesSlice = createSlice({
 });
 
 export default categoriesSlice.reducer;
+export const { getCategory } = categoriesSlice.actions;
