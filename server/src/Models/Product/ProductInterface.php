@@ -11,7 +11,7 @@ interface ProductInterface {
     
     
     
-    public static function getAllProducts(DatabaseContext $dbContext): array;
+    public static function getAllProducts(DatabaseContext $dbContext, string $category ): array;
     public function getCategoryId(): int;
     public function getId(): string;
     public function getName(): string ;

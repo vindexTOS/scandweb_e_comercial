@@ -4,18 +4,21 @@ import Logo from "../Assets/a-logo.png";
 import Cart from "../Assets/Empty Cart.png";
 import { NavBarInterface } from "../Types/NavBarInterface";
 import { fetchCategories } from "../Store/Categories/Categories.thunk";
+import { getCategory } from "../Store/Categories/Categories.slice";
+import { Category } from "../Types/CategoriesInterface";
 
 interface NavbarProps {
   navItems: NavBarInterface["navItems"];
   loading: boolean;
   error: string | null;
   fetchCategories: () => void;
+  getCategory: (category: Category) => void;
+  currentCategory: Category;
 }
 
 class Navbar extends Component<NavbarProps> {
   state: NavBarInterface = {
     navItems: [],
-    selectedNavItem: "all",
   };
 
   componentDidMount() {
@@ -28,8 +31,8 @@ class Navbar extends Component<NavbarProps> {
     }
   }
 
-  handleNavItemSelect = (itemName: string) => {
-    this.setState({ selectedNavItem: itemName });
+  handleNavItemSelect = (item: Category) => {
+    this.props.getCategory(item);
   };
 
   render() {
@@ -50,11 +53,11 @@ class Navbar extends Component<NavbarProps> {
             <div
               key={item.id}
               className={`cursor-pointer ${
-                this.state.selectedNavItem === item.name
+                this.props.currentCategory.name === item.name
                   ? "text-green-500 border-b-2 border-green-500"
                   : ""
               }`}
-              onClick={() => this.handleNavItemSelect(item.name)}
+              onClick={() => this.handleNavItemSelect(item)}
             >
               {item.name.toUpperCase()}
             </div>
@@ -80,10 +83,12 @@ const mapStateToProps = (state: any) => ({
   navItems: state.categories.navItems,
   loading: state.categories.loading,
   error: state.categories.error,
+  currentCategory: state.categories.currentCategory,
 });
 
 const mapDispatchToProps = {
   fetchCategories,
+  getCategory,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

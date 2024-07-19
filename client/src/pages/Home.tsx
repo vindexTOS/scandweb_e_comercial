@@ -4,28 +4,32 @@ import { connect } from "react-redux";
 import { fetchProducts } from "../Store/Products/Products.thunk";
 import ProductCard from "../Components/ProductCard";
 import { fetchCategories } from "../Store/Categories/Categories.thunk";
+import { Category } from "../Types/CategoriesInterface";
+import ProductCardLoadingSkeleton from "../Components/Skeletons/ProductCardLoadingSkeleton";
 interface HomeProps {
   products: Product[];
   status: string;
   error: string | null;
-  currentCategory: string;
+  currentCategory: Category;
   fetchProducts: (query: string) => void;
 }
 
 class Home extends Component<HomeProps> {
   componentDidMount() {
-    this.props.fetchProducts(
-      "{ products { name id gallery inStock  prices { id amount currency { label symbol } }} }"
-    );
-    console.log(this.props.currentCategory);
+    this.fetchProductsForCategory(this.props.currentCategory.id);
+  }
+  componentDidUpdate(prevProps: HomeProps) {
+    if (this.props.currentCategory.id !== prevProps.currentCategory.id) {
+      this.fetchProductsForCategory(this.props.currentCategory.id);
+    }
   }
 
+  fetchProductsForCategory(categoryId: string) {
+    const categoryQuery = `{ products(category: "${categoryId}") { name id gallery inStock category prices { id amount currency { label symbol } }} }`;
+    this.props.fetchProducts(categoryQuery);
+  }
   render() {
     const { products, status, error, currentCategory } = this.props;
-
-    if (status === "loading") {
-      return <div>Loading...</div>;
-    }
 
     if (status === "failed") {
       return <div>Error: {error}</div>;
@@ -33,11 +37,22 @@ class Home extends Component<HomeProps> {
 
     return (
       <div className={this.style.mainDiv}>
-        <header className={this.style.header}>{currentCategory}</header>
+        <header className={this.style.header}>{currentCategory.name}</header>
+
         <section className={this.style.cardsSection}>
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+          {status === "loading" ? (
+            <>
+              {new Array(8).fill("").map((item: string, index: number) => (
+                <ProductCardLoadingSkeleton key={index} />
+              ))}
+            </>
+          ) : (
+            <>
+              {products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </>
+          )}
         </section>
       </div>
     );
@@ -45,8 +60,9 @@ class Home extends Component<HomeProps> {
   private style = {
     mainDiv: "w-[100%] h-[100%] flex  flex-col py-10 ",
     header: "text-[3rem] text-gray-800 px-[8rem] pb-20",
+    cardSectionWrapper: "w-[100%] flex items-center justify-center",
     cardsSection:
-      "flex flex-wrap gap-10   items-center justify-center  w-[100%]",
+      "flex flex-wrap  gap-10   items-center justify-center  w-[100%]",
   };
 }
 

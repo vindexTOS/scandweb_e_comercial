@@ -4,9 +4,12 @@ import { CategoriesState } from "../../Types/CategoriesInterface";
 
 const initialState: CategoriesState = {
   navItems: [],
-  loading: false,
+  status: "idle",
   error: null,
-  currentCategory: "all",
+  currentCategory: {
+    name: "all",
+    id: "1",
+  },
 };
 
 const categoriesSlice = createSlice({
@@ -14,21 +17,21 @@ const categoriesSlice = createSlice({
   initialState,
   reducers: {
     getCategory: (state, action) => {
-      return { ...state, currentCategory: action.payload };
+      state.currentCategory = action.payload;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchCategories.pending, (state) => {
-        state.loading = true;
+        state.status = "loading";
         state.error = null;
       })
       .addCase(fetchCategories.fulfilled, (state, action) => {
-        state.loading = false;
+        state.status = "succeeded";
         state.navItems = action.payload;
       })
       .addCase(fetchCategories.rejected, (state, action) => {
-        state.loading = false;
+        state.status = "failed";
         state.error = action.error.message || "Failed to fetch categories";
       });
   },

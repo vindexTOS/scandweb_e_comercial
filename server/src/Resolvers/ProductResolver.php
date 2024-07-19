@@ -26,10 +26,10 @@ class ProductResolver {
   
   
   
-  public function getProducts(){
+  public function getProducts(?string $category){
     try {
       // return json_encode(Product::getAllProducts($this->dbContext));
-      return Product::getAllProducts($this->dbContext);
+      return Product::getAllProducts($this->dbContext, $category);
       
     } catch (\Exception $e) {
       var_dump($e);

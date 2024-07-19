@@ -21,10 +21,15 @@ class GraphQLSchema extends GraphQLTypes {
             'name' => 'Query',
             'fields' => [
                 'products' => [
+                    'args' => [
+                        'category' => ['type' => Type::string()],  
+                    ],
                     'type' => Type::listOf($this->getProductType()),
                     'resolve' => function ($root, $args, $context, $info) {
                         try {
-                            return $context['productResolver']->getProducts();
+                            $category = isset($args['category']) ? (string) $args['category'] : null;
+                            
+                            return $context['productResolver']->getProducts($args['category']);
                         } catch (Throwable $e) {
                             error_log('Error in resolver: ' . $e->getMessage());
                             return null;
