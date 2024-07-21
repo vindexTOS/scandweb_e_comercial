@@ -26,7 +26,9 @@ class GraphQL extends GraphQLSchema {
     public function getTest() {
         try {
             // return $this->productResolver->getProducts();
-            return $this->categoriesReslover->getCategories();
+            // return $this->categoriesReslover->getCategories();
+            return $this->productResolver->getProduct("apple-airpods-pro");
+
         } catch (\Exception $e) {
             var_dump($e);
             echo "ERROR 500";

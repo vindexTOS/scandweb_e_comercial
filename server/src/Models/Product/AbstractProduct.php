@@ -36,52 +36,70 @@ abstract class AbstractProduct implements ProductInterface {
     abstract public function getGallery(): Gallery;
     abstract public function getBrand(): string;
     
-    public static function getAllProducts(DatabaseContext $dbContext,  ?string $category  ): array {
+    private static function processProductData(array $productData, DatabaseContext $dbContext): array {
+        $prices = Price::getAllPrices($dbContext, $productData['id']);
+        $gallery = Gallery::getGalleryWithProductId($dbContext, $productData['id']);
+        $category = Category::getCategory($dbContext, $productData['category']);
+        $attributes = Attribute::getAttributes($dbContext, $productData['id']);
+        
+        $priceArray = [];
+        foreach ($prices as $price) {
+            $priceArray[] = $price->toArray();
+        }
+        
+        $galleryArray = [];
+        foreach ($gallery as $item) {
+            $galleryArray[] = $item->getUrl();
+        }
+        
+        return [
+            'id' => $productData['graphqlId'],
+            'name' => $productData['name'],
+            'inStock' => $productData['inStock'] == 0 ? false : true,
+            'gallery' => $galleryArray,
+            'description' => $productData['description'],
+            'attributes' => $attributes,
+            'category' => $category->getName(),
+            'prices' => $priceArray,
+            'brand' => $productData['brand']
+        ];
+    }
+
+    public static function getAllProducts(DatabaseContext $dbContext, ?string $category): array {
         try {
-            
             $query = "SELECT * FROM products";
             $params = [];
             
-            if ($category !== null &&  $category !== "1") {
+            if ($category !== null && $category !== "1") {
                 $query .= " WHERE category = :category";
                 $params[':category'] = $category;
             }
+            
             $productsData = $dbContext->getAll($query, $params);
             
             $products = [];
             foreach ($productsData as $productData) {
-                $prices = Price::getAllPrices($dbContext, $productData['id']);
-                $gallery = Gallery::getGalleryWithProductId($dbContext, $productData['id']);
-                $category = Category::getCategory($dbContext, $productData['category']);
-                $attributes = Attribute::getAttributes($dbContext, $productData['id']);
-                
-                $priceArray = [];
-                foreach ($prices as $price) {
-                    $priceArray[] = $price->toArray();
-                }
-                
-                $galleryArray = [];
-                foreach ($gallery as $item) {
-                    $galleryArray[] = $item->getUrl();
-                }
-                
-                $products[] = [
-                    'id' => $productData['graphqlId'],
-                    'name' => $productData['name'],
-                    'inStock' => $productData['inStock'] == 0 ? false : true,
-                    'gallery' => $galleryArray,
-                    'description' => $productData['description'],
-                    'attributes' => $attributes,
-                    'category' => $category->getName(),
-                    'prices' => $priceArray,
-                    'brand' => $productData['brand']
-                ];
+                $products[] = self::processProductData($productData, $dbContext);
             }
             
             header('Content-Type: application/json');
             return $products;
         } catch (PDOException $e) {
             throw new RuntimeException("Failed to fetch products: " . $e->getMessage());
+        }
+    }
+
+    public static function getSingleProduct(DatabaseContext $dbContext, string $id) {
+        try {
+            $query = 'SELECT * FROM products WHERE graphqlId = :graphqlId';
+            $productData = $dbContext->getSingle($query, ['graphqlId' => $id]); 
+            
+            $product = self::processProductData($productData, $dbContext);
+            
+            header('Content-Type: application/json');
+            return $product;
+        } catch (PDOException $e) {
+            throw new RuntimeException("Failed to fetch product: " . $e->getMessage());
         }
     }
 }

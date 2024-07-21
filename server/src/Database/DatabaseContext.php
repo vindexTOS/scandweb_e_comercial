@@ -25,14 +25,16 @@ class DatabaseContext {
         }
     }
 
-    public function getSingle(string $query, array $params = []): ?array {
+    public function getSingle(string $query, array $params = []) {
         try {
             $stmt = $this->conn->prepare($query);
-            $stmt->execute($params);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+              $stmt->execute($params);
+            $res = $stmt->fetch(PDO::FETCH_ASSOC);
+             return $res;
         } catch (PDOException $e) {
+            error_log('Database error: ' . $e->getMessage());
             throw new RuntimeException("Failed to fetch single row: " . $e->getMessage());
-        }}
-    
+        }
+    }
  
 }

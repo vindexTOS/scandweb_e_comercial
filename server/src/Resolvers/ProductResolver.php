@@ -33,7 +33,20 @@ class ProductResolver {
       
     } catch (\Exception $e) {
       var_dump($e);
-      throw new Error('Failed to fetch prices: ' . $e->getMessage());
+      throw new Error('Failed to fetch products: ' . $e->getMessage());
+    }
+  }
+
+  public function getProduct(string $id){
+    try {
+
+   
+     
+
+     return   Product::getSingleProduct($this->dbContext, $id );
+    } catch (\Exception $e) {
+       ($e);
+      throw new Error('Failed to fetch product: ' . $e->getMessage());
     }
   }
 }
