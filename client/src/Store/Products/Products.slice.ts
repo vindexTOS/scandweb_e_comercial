@@ -5,7 +5,7 @@ const productsSlice = createSlice({
   name: "products",
   initialState: {
     items: [],
-    singleProdsuct: {},
+    singleProduct: {},
     status: "idle",
     error: null,
   },
@@ -28,7 +28,8 @@ const productsSlice = createSlice({
       })
       .addCase(fetchSingleProduct.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.singleProdsuct = action.payload;
+        console.log ( "PAYLOAD ", action.payload)
+        state.singleProduct = action.payload;
       })
       .addCase(fetchSingleProduct.rejected, (state, action) => {
         state.status = "failed";
