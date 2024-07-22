@@ -7,7 +7,7 @@ export const fetchGraphql = async (queryString: string) => {
 
   try {
     const data = await request(endpoint, query);
-    return data; // Return the data
+    return data;
   } catch (error) {
     console.error("GraphQL request error:", error);
     throw new Error("Failed to fetch GraphQL data");

@@ -6,10 +6,11 @@ import { NavBarInterface } from "../Types/NavBarInterface";
 import { fetchCategories } from "../Store/Categories/Categories.thunk";
 import { getCategory } from "../Store/Categories/Categories.slice";
 import { Category } from "../Types/CategoriesInterface";
+import { StatusType } from "../Types/StatusInterface";
 
 interface NavbarProps {
   navItems: NavBarInterface["navItems"];
-  loading: boolean;
+  status: StatusType;
   error: string | null;
   fetchCategories: () => void;
   getCategory: (category: Category) => void;
@@ -36,9 +37,9 @@ class Navbar extends Component<NavbarProps> {
   };
 
   render() {
-    const { loading, error } = this.props;
+    const { status, error } = this.props;
 
-    if (loading) {
+    if (status == "loading") {
       return <div>Loading...</div>;
     }
 

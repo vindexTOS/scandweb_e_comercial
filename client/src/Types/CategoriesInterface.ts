@@ -1,3 +1,5 @@
+import { ErrorType, StatusType } from "./StatusInterface";
+
 export interface Category {
   id: string;
   name: string;
@@ -6,7 +8,7 @@ export interface Category {
 
 export interface CategoriesState {
   navItems: Category[];
-  status: "idle" | "loading" | "succeeded" | "failed";
-  error: string | null;
+  status: StatusType;
+  error: ErrorType;
   currentCategory: Category;
 }

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Product } from "../Types/ProductsInterface";
+import { Link } from "react-router-dom";
 
 interface ProductCardProps {
   product: Product;
@@ -10,7 +11,7 @@ export default class ProductCard extends Component<ProductCardProps> {
     const { product } = this.props;
 
     return (
-      <div onClick={() => console.log(product)} className={this.style.mainDiv}>
+      <Link to={product.id} className={this.style.mainDiv}>
         <div className={this.style.photoWrapper}>
           <img className={this.style.img} src={product.gallery[0]} />
           {!product.inStock && (
@@ -24,7 +25,7 @@ export default class ProductCard extends Component<ProductCardProps> {
             {product.prices[0].amount}
           </p>
         </div>
-      </div>
+      </Link>
     );
   }
 
