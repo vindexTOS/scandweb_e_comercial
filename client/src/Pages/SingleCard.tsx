@@ -4,8 +4,9 @@ import { fetchSingleProduct } from "../Store/Products/Products.thunk";
 import { connect } from "react-redux";
 import { StatusType } from "../Types/StatusInterface";
 import { Product } from "../Types/ProductsInterface";
-import ImageGallery from "../Components/ImageGallery";
- 
+import ImageGallery from "../Components/Product/ImageGallery";
+
+import ProductInfo from "../Components/Product/ProductInfo";
 
 interface SingleCardProps {
   params: {
@@ -24,37 +25,43 @@ class SingleCard extends Component<SingleCardProps> {
   }
 
   fetchProductForCategory(id: string) {
-    const productQuery = `{ singleProduct(id: "${id}") { name id gallery inStock category prices { id amount currency { label symbol } } } }`;
+    const productQuery = `{ singleProduct(id: "${id}")   { name id gallery inStock category  attributes { id name type items { id displayValue value } }  prices { id amount currency { label symbol } }   } }`;
     this.props.fetchSingleProduct(productQuery);
   }
 
   render() {
     const { status, error, product } = this.props;
-   
+
     if (status === "loading") {
       return <div className="text-[9rem]">Loading...</div>;
     }
     if (status === "failed") {
       return <div className="text-[9rem]">Error: {error}</div>;
     }
-    if (status === "succeeded" && product) {
+    if (status === "succeeded" && product && product.gallery) {
       return (
-        <main  className={this.style.main}>
+        <main className={this.style.main}>
           <ImageGallery gallery={product.gallery} />
-          
+
+          <ProductInfo
+            name={product.name}
+            attributes={product.attributes}
+            description={product.description}
+            prices={product.prices}
+          />
         </main>
       );
     }
-    return null;  
+    return null;
   }
 
   private style = {
-    main: "flex items-center w-[100%] justify-center",
+    main: "flex items-center w-[100%] justify-around",
   };
 }
 
 const mapStateToProps = (state: any) => ({
-  product: state.products.singleProduct, 
+  product: state.products.singleProduct,
   status: state.products.status,
   error: state.products.error,
 });

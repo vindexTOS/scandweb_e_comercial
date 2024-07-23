@@ -7,6 +7,7 @@ import { fetchCategories } from "../Store/Categories/Categories.thunk";
 import { getCategory } from "../Store/Categories/Categories.slice";
 import { Category } from "../Types/CategoriesInterface";
 import { StatusType } from "../Types/StatusInterface";
+import { Link } from "react-router-dom";
 
 interface NavbarProps {
   navItems: NavBarInterface["navItems"];
@@ -51,7 +52,8 @@ class Navbar extends Component<NavbarProps> {
       <nav className={this.styles.nav}>
         <section className={this.styles.navLinks}>
           {this.state.navItems?.map((item) => (
-            <div
+            <Link
+              to="/"
               key={item.id}
               className={`cursor-pointer ${
                 this.props.currentCategory.name === item.name
@@ -61,11 +63,13 @@ class Navbar extends Component<NavbarProps> {
               onClick={() => this.handleNavItemSelect(item)}
             >
               {item.name.toUpperCase()}
-            </div>
+            </Link>
           ))}
         </section>
         <div>
-          <img src={Logo} alt="Logo" />
+          <Link to="/">
+            <img src={Logo} alt="Logo" />
+          </Link>
         </div>
         <div>
           <img src={Cart} alt="Cart" />

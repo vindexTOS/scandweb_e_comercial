@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Product } from "../Types/ProductsInterface";
 import { connect } from "react-redux";
 import { fetchProducts } from "../Store/Products/Products.thunk";
-import ProductCard from "../Components/ProductCard";
+import ProductCard from "../Components/Product/ProductCard";
 import { fetchCategories } from "../Store/Categories/Categories.thunk";
 import { Category } from "../Types/CategoriesInterface";
 import ProductCardLoadingSkeleton from "../Components/Skeletons/ProductCardLoadingSkeleton";
