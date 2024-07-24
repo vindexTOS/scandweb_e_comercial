@@ -13,7 +13,7 @@ export default class Attributes extends Component<AttributesProps> {
         {attributes &&
           attributes.map((attr: Attribute, index: number) => (
             <div className={this.style.itemsWrapper} key={index}>
-              <h2>{attr.name.toUpperCase()}:</h2>
+              <h2 className="font-bold">{attr.name.toUpperCase()}:</h2>
               <div className={this.style.items}>
                 {attr.items.map((item: any, i: number) => {
                   if (attr.name === "Color" && attr.type === "swatch") {
@@ -44,6 +44,6 @@ export default class Attributes extends Component<AttributesProps> {
   private style = {
     itemsWrapper: "",
     items: "flex gap-2",
-    item: "w-[63px] h-[45px] flex items-center justify-center border-[1px] border-black text-gray-500",
+    item: "w-[63px] h-[45px]  flex items-center justify-center border-[1px] border-black text-gray-500",
   };
 }

@@ -67,7 +67,7 @@ class ImageGallery extends React.Component<
   }
 
   private style = {
-    gallerySection: "flex items-start gap-5 mt-20",
+    gallerySection: "flex items-start gap-5  ",
     choseGalleryWrapper: "flex flex-col gap-3 ",
     smallImg: "w-[79px] h-[80px] cursor-pointer",
     imgSliderWrapper: "flex justify-center items-center relative",

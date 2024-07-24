@@ -25,7 +25,7 @@ class SingleCard extends Component<SingleCardProps> {
   }
 
   fetchProductForCategory(id: string) {
-    const productQuery = `{ singleProduct(id: "${id}")   { name id gallery inStock category  attributes { id name type items { id displayValue value } }  prices { id amount currency { label symbol } }   } }`;
+    const productQuery = `{ singleProduct(id: "${id}")   { name id gallery inStock category description attributes { id name type items { id displayValue value } }  prices { id amount currency { label symbol } }   } }`;
     this.props.fetchSingleProduct(productQuery);
   }
 
@@ -56,7 +56,7 @@ class SingleCard extends Component<SingleCardProps> {
   }
 
   private style = {
-    main: "flex items-center w-[100%] justify-around",
+    main: "flex items-start  w-[100%] h-[100vh] justify-center gap-[10rem] pt-40  ",
   };
 }
 

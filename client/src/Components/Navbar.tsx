@@ -88,6 +88,7 @@ const mapStateToProps = (state: any) => ({
   navItems: state.categories.navItems,
   loading: state.categories.loading,
   error: state.categories.error,
+  status: state.categories.status,
   currentCategory: state.categories.currentCategory,
 });
 
