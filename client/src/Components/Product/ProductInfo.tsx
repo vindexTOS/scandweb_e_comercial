@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Attribute, Price } from "../../Types/ProductsInterface";
+import { Attribute, CartProduct, Price } from "../../Types/ProductsInterface";
 import Attributes from "./Attributes";
 import { connect } from "react-redux";
 import { addToCart } from "../../Store/Cart/Cart.slice";
@@ -8,6 +8,7 @@ interface ProductInfoProps {
   attributes: Attribute[];
   description: string;
   name: string;
+  id: string;
   prices: Price[];
   addToCart: (state: any) => void;
   cartProducts: any[];
@@ -15,6 +16,7 @@ interface ProductInfoProps {
 
 interface ProductInfoState {
   isExpanded: boolean;
+  numberOfItems: number;
 }
 
 class ProductInfo extends Component<ProductInfoProps, ProductInfoState> {
@@ -22,11 +24,41 @@ class ProductInfo extends Component<ProductInfoProps, ProductInfoState> {
     super(props);
     this.state = {
       isExpanded: false,
+      numberOfItems: 0,
     };
   }
-  handleCart = (product: any) => {
+
+  componentDidMount(): void {
+    let cart: CartProduct[] = [];
+
+    const storedCart = localStorage.getItem("cart-product");
+    if (storedCart) {
+      cart = JSON.parse(storedCart);
+      this.handleNumberCount(cart);
+    }
+  }
+  handleNumberCount(cart: CartProduct[]) {
+    this.setState((prevState) => ({
+      numberOfItems: cart.filter(
+        (item: CartProduct) => item.id === this.props.id
+      ).length,
+    }));
+  }
+  handleCart(product: CartProduct) {
+    let cart: CartProduct[] = [];
+
+    const storedCart = localStorage.getItem("cart-product");
+
+    if (storedCart) {
+      cart = JSON.parse(storedCart);
+    }
+
+    cart.push(product);
+    this.handleNumberCount(cart);
+    localStorage.setItem("cart-product", JSON.stringify(cart));
+
     this.props.addToCart(product);
-  };
+  }
   toggleDescription = () => {
     this.setState((prevState) => ({
       isExpanded: !prevState.isExpanded,
@@ -34,7 +66,7 @@ class ProductInfo extends Component<ProductInfoProps, ProductInfoState> {
   };
 
   render() {
-    const { name, attributes, prices, description } = this.props;
+    const { name, attributes, prices, description, id } = this.props;
     const { isExpanded } = this.state;
     const maxLength = 500;
 
@@ -98,12 +130,12 @@ class ProductInfo extends Component<ProductInfoProps, ProductInfoState> {
         </div>
         <button
           onClick={() =>
-            this.props.addToCart({ name, attributes, prices, description })
+            this.handleCart({ name, attributes, prices, description, id })
           }
           className={this.style.btn}
         >
           Add To Cart +
-          {this.props.cartProducts.length > 0 && this.props.cartProducts.length}
+          {this.state.numberOfItems > 0 && this.state.numberOfItems}
         </button>
 
         {renderDescription()}
