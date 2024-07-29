@@ -49,6 +49,7 @@ class SingleCard extends Component<SingleCardProps> {
             attributes={product.attributes}
             description={product.description}
             prices={product.prices}
+            gallery={product.gallery}
           />
         </main>
       );

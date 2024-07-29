@@ -8,8 +8,9 @@ import { getCategory } from "../Store/Categories/Categories.slice";
 import { Category } from "../Types/CategoriesInterface";
 import { StatusType } from "../Types/StatusInterface";
 import { Link } from "react-router-dom";
-import { CartProduct } from "../Types/ProductsInterface";
-import { addArrayToCart } from "../Store/Cart/Cart.slice";
+ 
+import { addArrayToCart, handleShowCart } from "../Store/Cart/Cart.slice";
+import { CartProductType } from "../Types/ProductsInterface";
 
 interface NavbarProps {
   navItems: NavBarInterface["navItems"];
@@ -18,9 +19,10 @@ interface NavbarProps {
   error: string | null;
   fetchCategories: () => void;
   getCategory: (category: Category) => void;
-  addArrayToCart: (state: CartProduct[]) => void;
+  addArrayToCart: (state:CartProductType[]) => void;
+  handleShowCart:()=>void;
   currentCategory: Category;
-  cartProducts: CartProduct[];
+  cartProducts: CartProductType[];
 }
 
 class Navbar extends Component<NavbarProps> {
@@ -89,7 +91,7 @@ class Navbar extends Component<NavbarProps> {
               {this.props.cartProducts.length}
             </div>
           )}
-          <img src={Cart} alt="Cart" />
+          <img onClick={()=>this.props.handleShowCart()} src={Cart} alt="Cart" />
         </div>
       </nav>
     );
@@ -116,7 +118,8 @@ const mapStateToProps = (state: any) => ({
 const mapDispatchToProps = {
   fetchCategories,
   getCategory,
-  addArrayToCart,
+  addArrayToCart,handleShowCart
+
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

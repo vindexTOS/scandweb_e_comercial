@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Attribute, CartProduct, Price } from "../../Types/ProductsInterface";
+import { Attribute, CartProductType, Price } from "../../Types/ProductsInterface";
 import Attributes from "./Attributes";
 import { connect } from "react-redux";
 import { addToCart } from "../../Store/Cart/Cart.slice";
@@ -12,6 +12,7 @@ interface ProductInfoProps {
   prices: Price[];
   addToCart: (state: any) => void;
   cartProducts: any[];
+  gallery:string[]
 }
 
 interface ProductInfoState {
@@ -29,7 +30,7 @@ class ProductInfo extends Component<ProductInfoProps, ProductInfoState> {
   }
 
   componentDidMount(): void {
-    let cart: CartProduct[] = [];
+    let cart:  CartProductType[] = [];
 
     const storedCart = localStorage.getItem("cart-product");
     if (storedCart) {
@@ -37,15 +38,15 @@ class ProductInfo extends Component<ProductInfoProps, ProductInfoState> {
       this.handleNumberCount(cart);
     }
   }
-  handleNumberCount(cart: CartProduct[]) {
+  handleNumberCount(cart:  CartProductType[]) {
     this.setState((prevState) => ({
       numberOfItems: cart.filter(
-        (item: CartProduct) => item.id === this.props.id
+        (item:  CartProductType) => item.id === this.props.id
       ).length,
     }));
   }
-  handleCart(product: CartProduct) {
-    let cart: CartProduct[] = [];
+  handleCart(product:  CartProductType) {
+    let cart:  CartProductType[] = [];
 
     const storedCart = localStorage.getItem("cart-product");
 
@@ -66,7 +67,7 @@ class ProductInfo extends Component<ProductInfoProps, ProductInfoState> {
   };
 
   render() {
-    const { name, attributes, prices, description, id } = this.props;
+    const { name, attributes, prices, description, id , gallery  } = this.props;
     const { isExpanded } = this.state;
     const maxLength = 500;
 
@@ -130,7 +131,7 @@ class ProductInfo extends Component<ProductInfoProps, ProductInfoState> {
         </div>
         <button
           onClick={() =>
-            this.handleCart({ name, attributes, prices, description, id })
+            this.handleCart({ name, attributes, prices, description, id ,photo:gallery[0] })
           }
           className={this.style.btn}
         >

@@ -38,12 +38,13 @@ interface ProductsData {
     products: Product[];
   };
 }
-interface CartProduct {
+interface CartProductType {
   name: string;
   description: string;
   attributes: Attribute[];
   prices: Price[];
   id: string;
+ photo:string 
 }
 export type {
   Product,
@@ -52,5 +53,5 @@ export type {
   ProductsData,
   Attribute,
   AttributeItem,
-  CartProduct,
+  CartProductType,
 };
