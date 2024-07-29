@@ -2,16 +2,17 @@ import React, { Component } from 'react';
 import { CartProductType, Attribute } from '../../Types/ProductsInterface';
 
 export default class CartItemCard extends Component<CartProductType> {
-  renderAttributes(attributes: Attribute[]) {
+  renderAttributes(attributes: Attribute[], selectedAttrabutes:any ) {
     return attributes?.map((attr: Attribute, index: number) => (
         <div className={this.styles.itemsWrapper} key={index}>
-          <h2 className="font-bold">{attr.name.toUpperCase()}:</h2>
+          <h2 className="font-bold text-[13px]" >{attr.name.toUpperCase()}:</h2>
           <div className={this.styles.items}>
             {attr.items.map((item: any, i: number) => {
               if (attr.name === "Color" && attr.type === "swatch") {
                 return (
                   <div
-                    className={this.styles.item}
+                  className={`${this.styles.item} ${this.props.selectedAttrabutes[attr.name] === item.value && "outline outline-4-red"}  `}
+
                     key={i}
                     style={{ backgroundColor: item.value }}
                   >
@@ -20,7 +21,10 @@ export default class CartItemCard extends Component<CartProductType> {
                 );
               } else {
                 return (
-                  <div className={this.styles.item} key={i}>
+                  <div 
+                  className={`${this.styles.item} ${this.props.selectedAttrabutes[attr.name] === item.value && "outline outline-4-red"}  `}
+                  
+                  key={i}>
                     {item.value.toUpperCase()}
                   </div>
                 );
@@ -32,7 +36,7 @@ export default class CartItemCard extends Component<CartProductType> {
   }
 
   render() {
-    const { id, name, photo, prices, attributes } = this.props;
+    const { id, name, photo, prices, attributes , selectedAttrabutes} = this.props;
 
     return (
       <div onClick={() => console.log(this.props)} className={this.styles.mainDiv}>
@@ -42,7 +46,7 @@ export default class CartItemCard extends Component<CartProductType> {
             <span>{prices[0].currency.symbol}</span>
             <span>{prices[0].amount}</span>
           </div>
-          <div>{this.renderAttributes(attributes)}</div>
+          <div>{this.renderAttributes(attributes, selectedAttrabutes)}</div>
         </div>
         <div className={this.styles.addDiv}>
           <div className={this.styles.iconBox}>+</div>
@@ -65,6 +69,6 @@ export default class CartItemCard extends Component<CartProductType> {
     img: 'h-[167px] w-[121px]',
     itemsWrapper: "",
     items: "flex gap-2  flex-wrap",
-    item: "w-[34px] h-[34px]  text-[12px] flex items-center justify-center border-[1px] border-black text-gray-500",
+    item: "w-[34px] h-[34px]  text-[11px] flex items-center justify-center border-[1px] border-black text-gray-500",
   };
 }

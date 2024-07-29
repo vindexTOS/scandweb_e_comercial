@@ -4,6 +4,7 @@ const initialState: any = {
   product: {},
   cartProducts: [],
   showCart: false,
+  attrabuteSelector:{}
 };
 
 const CartSlice = createSlice({
@@ -19,7 +20,11 @@ const CartSlice = createSlice({
     handleShowCart: (state) => {
       state.showCart = !state.showCart;
     },
+    handleAttrabuteSelector:(state,action)=>{
+  
+        state.attrabuteSelector[action.payload.key] = action.payload.value
+    }
   },
 });
-export const { addToCart, addArrayToCart,handleShowCart } = CartSlice.actions;
+export const { addToCart, addArrayToCart,handleShowCart, handleAttrabuteSelector } = CartSlice.actions;
 export default CartSlice.reducer;

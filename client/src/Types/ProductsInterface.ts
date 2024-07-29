@@ -45,6 +45,7 @@ interface CartProductType {
   prices: Price[];
   id: string;
  photo:string 
+ selectedAttrabutes?:any
 }
 export type {
   Product,

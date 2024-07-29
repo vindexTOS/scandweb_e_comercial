@@ -60,9 +60,9 @@ class CartOverlay extends Component<CartOverLayProps,  CartOverlayState> {
      
         className="fixed inset-0 top-20 z-50 flex items-start justify-end bg-black bg-opacity-50"
       >
-        <div    ref={this.overlayRef} className=" bg-white w-[425px] h-[628px] overflow-y-auto   mr-20 shadow-lg">
-          <div><span  className="text-xl font-bold mb-4">My Beg,</span> <span>{cartItems.length} items</span></div>
-          <div className="w-[100%] flex flex-col gap-10     ">
+        <div    ref={this.overlayRef} className=" bg-white w-[425px] h-[628px] overflow-y-auto   mr-20 shadow-lg flex flex-col gap-10">
+          <div><span  className="text-xl font-bold mb-5 pb-10">My Beg,</span> <span>{cartItems.length} items</span></div>
+          <div className="w-[100%] py-10 flex flex-col gap-10     ">
             {cartItems.length > 0 ? cartItems.map((val: CartProductType, i:number) => <CartItemCard key={val.id + i} {...val} />) : <div>No items in cart</div>}
           </div>
          

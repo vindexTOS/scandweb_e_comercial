@@ -4,6 +4,8 @@ import Attributes from "./Attributes";
 import { connect } from "react-redux";
 import { addToCart } from "../../Store/Cart/Cart.slice";
 
+  
+
 interface ProductInfoProps {
   attributes: Attribute[];
   description: string;
@@ -13,11 +15,15 @@ interface ProductInfoProps {
   addToCart: (state: any) => void;
   cartProducts: any[];
   gallery:string[]
+  attrabuteSelector:any
+
+
 }
 
 interface ProductInfoState {
   isExpanded: boolean;
   numberOfItems: number;
+ 
 }
 
 class ProductInfo extends Component<ProductInfoProps, ProductInfoState> {
@@ -26,8 +32,9 @@ class ProductInfo extends Component<ProductInfoProps, ProductInfoState> {
     this.state = {
       isExpanded: false,
       numberOfItems: 0,
+      // attrabuteSelector:{}
     };
-  }
+   }
 
   componentDidMount(): void {
     let cart:  CartProductType[] = [];
@@ -45,9 +52,20 @@ class ProductInfo extends Component<ProductInfoProps, ProductInfoState> {
       ).length,
     }));
   }
-  handleCart(product:  CartProductType) {
-    let cart:  CartProductType[] = [];
 
+  // handleAttrabutes(key: string, value: string) {
+  //   console.log(key,value)
+
+  //   this.setState((prevState) => ({
+  //     attrabuteSelector: {
+  //       ...prevState.attrabuteSelector,
+  //       [key]: value
+  //     }
+  //   }));
+  // }
+  handleCart(product:  CartProductType) {
+    let cart:   CartProductType[] = [];
+    product["selectedAttrabutes"] =  this.props.attrabuteSelector
     const storedCart = localStorage.getItem("cart-product");
 
     if (storedCart) {
@@ -116,7 +134,7 @@ class ProductInfo extends Component<ProductInfoProps, ProductInfoState> {
     return (
       <div className={this.style.main}>
         <h1 className={this.style.header}>{name}</h1>
-        <Attributes attributes={attributes} />
+        <Attributes  attributes={attributes} />
         <div className={this.style.price}>
           <h1
             className={this.style.priceHeader}
@@ -155,6 +173,7 @@ class ProductInfo extends Component<ProductInfoProps, ProductInfoState> {
 
 const mapStateToProps = (state: any) => ({
   cartProducts: state.cart.cartProducts,
+  attrabuteSelector:state.cart.attrabuteSelector
 });
 
 const mapDispatchToProps = {
