@@ -1,30 +1,40 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { CartProductType } from '../../Types/ProductsInterface';
 
-const initialState: any = {
-  product: {},
+interface CartState {
+  cartProducts: CartProductType[];
+  showCart: boolean;
+  attrabuteSelector: { [key: string]: any };
+}
+
+const initialState: CartState = {
   cartProducts: [],
   showCart: false,
-  attrabuteSelector:{}
+  attrabuteSelector: {}
 };
 
 const CartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addToCart: (state, action) => {
-      state.cartProducts = [...state.cartProducts, action.payload];
+    addToCart: (state, action: PayloadAction<CartProductType>) => {
+      state.cartProducts.push(action.payload);
     },
-    addArrayToCart: (state, action) => {
+    addArrayToCart: (state, action: PayloadAction<CartProductType[]>) => {
       state.cartProducts = action.payload;
     },
-    handleShowCart: (state) => {
-      state.showCart = !state.showCart;
+    handleShowCart: (state,action) => {
+      state.showCart = action.payload;
     },
-    handleAttrabuteSelector:(state,action)=>{
   
-        state.attrabuteSelector[action.payload.key] = action.payload.value
+    handleAttrabuteSelector: (state, action: PayloadAction<{ key: string, value: any }>) => {
+      state.attrabuteSelector[action.payload.key] = action.payload.value;
+    },
+    handleClearAttrabutesSelector: (state) => {
+      state.attrabuteSelector = {};
     }
   },
 });
-export const { addToCart, addArrayToCart,handleShowCart, handleAttrabuteSelector } = CartSlice.actions;
+
+export const { addToCart, addArrayToCart, handleShowCart, handleAttrabuteSelector, handleClearAttrabutesSelector } = CartSlice.actions;
 export default CartSlice.reducer;

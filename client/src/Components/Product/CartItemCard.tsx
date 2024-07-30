@@ -1,42 +1,47 @@
 import React, { Component } from 'react';
 import { CartProductType, Attribute } from '../../Types/ProductsInterface';
 
-export default class CartItemCard extends Component<CartProductType> {
-  renderAttributes(attributes: Attribute[], selectedAttrabutes:any ) {
-    return attributes?.map((attr: Attribute, index: number) => (
-        <div className={this.styles.itemsWrapper} key={index}>
-          <h2 className="font-bold text-[13px]" >{attr.name.toUpperCase()}:</h2>
-          <div className={this.styles.items}>
-            {attr.items.map((item: any, i: number) => {
-              if (attr.name === "Color" && attr.type === "swatch") {
-                return (
-                  <div
-                  className={`${this.styles.item} ${this.props.selectedAttrabutes[attr.name] === item.value && "outline outline-4-red"}  `}
+interface CartItemCardProps extends CartProductType {
+  count: number;
+  handleCart: (product: any) => void;
+  handleRemove: (product: any) => void;
+}
 
-                    key={i}
-                    style={{ backgroundColor: item.value }}
-                  >
-                    {attr.name !== "Color" && item.value.toUpperCase()}
-                  </div>
-                );
-              } else {
-                return (
-                  <div 
-                  className={`${this.styles.item} ${this.props.selectedAttrabutes[attr.name] === item.value && "outline outline-4-red"}  `}
-                  
-                  key={i}>
-                    {item.value.toUpperCase()}
-                  </div>
-                );
-              }
-            })}
-          </div>
+class CartItemCard extends Component<CartItemCardProps> {
+  renderAttributes(attributes: Attribute[], selectedAttrabutes: any) {
+    return attributes?.map((attr: Attribute, index: number) => (
+      <div className={this.styles.itemsWrapper} key={index}>
+        <h2 className="font-bold text-[13px]">{attr.name.toUpperCase()}:</h2>
+        <div className={this.styles.items}>
+          {attr.items.map((item: any, i: number) => {
+            if (attr.name === "Color" && attr.type === "swatch") {
+              return (
+                <div
+                  className={`${this.styles.item} ${selectedAttrabutes[attr.name] === item.value && "outline outline-4-red"}`}
+                  key={i}
+                  style={{ backgroundColor: item.value }}
+                >
+                  {attr.name !== "Color" && item.value.toUpperCase()}
+                </div>
+              );
+            } else {
+              return (
+                <div
+                  className={`${this.styles.item} ${selectedAttrabutes[attr.name] === item.value && "outline outline-4-red"}`}
+                  key={i}
+                >
+                  {item.value.toUpperCase()}
+                </div>
+              );
+            }
+          })}
         </div>
+      </div>
     ));
   }
 
   render() {
-    const { id, name, photo, prices, attributes , selectedAttrabutes} = this.props;
+    const { id, name, photo, prices, attributes, selectedAttrabutes, count, handleCart, handleRemove } = this.props;
 
     return (
       <div onClick={() => console.log(this.props)} className={this.styles.mainDiv}>
@@ -49,9 +54,9 @@ export default class CartItemCard extends Component<CartProductType> {
           <div>{this.renderAttributes(attributes, selectedAttrabutes)}</div>
         </div>
         <div className={this.styles.addDiv}>
-          <div className={this.styles.iconBox}>+</div>
-          <div>1</div>
-          <div className={this.styles.iconBox}>-</div>
+          <div onClick={() => handleCart(this.props)} className={this.styles.iconBox}>+</div>
+          <div>{count}</div>
+          <div onClick={() => handleRemove(this.props)} className={this.styles.iconBox}>-</div>
         </div>
         <div className={this.styles.photoDiv}>
           <img className={this.styles.img} src={photo} />
@@ -62,13 +67,15 @@ export default class CartItemCard extends Component<CartProductType> {
 
   private styles = {
     mainDiv: 'min-h-[167px] w-[100%] flex justify-between',
-    infoDiv: 'w-[164px] flex flex-col pl-2 ',
+    infoDiv: 'w-[164px] flex flex-col pl-2',
     addDiv: 'min-h-[167px] w-[50px] mr-1 flex flex-col items-center justify-between',
     iconBox: 'flex h-[24px] w-[24px] items-center justify-center outline outline-[1px]',
     photoDiv: '',
     img: 'h-[167px] w-[121px]',
     itemsWrapper: "",
-    items: "flex gap-2  flex-wrap",
-    item: "w-[34px] h-[34px]  text-[11px] flex items-center justify-center border-[1px] border-black text-gray-500",
+    items: "flex gap-2 flex-wrap",
+    item: "w-[34px] h-[34px] text-[11px] flex items-center justify-center border-[1px] border-black text-gray-500",
   };
 }
+
+export default CartItemCard;

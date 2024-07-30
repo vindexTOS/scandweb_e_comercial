@@ -9,7 +9,7 @@ import { Category } from "../Types/CategoriesInterface";
 import { StatusType } from "../Types/StatusInterface";
 import { Link } from "react-router-dom";
  
-import { addArrayToCart, handleShowCart } from "../Store/Cart/Cart.slice";
+import { addArrayToCart, handleClearAttrabutesSelector, handleShowCart } from "../Store/Cart/Cart.slice";
 import { CartProductType } from "../Types/ProductsInterface";
 
 interface NavbarProps {
@@ -20,9 +20,11 @@ interface NavbarProps {
   fetchCategories: () => void;
   getCategory: (category: Category) => void;
   addArrayToCart: (state:CartProductType[]) => void;
-  handleShowCart:()=>void;
+  handleShowCart:(bool:boolean)=>void;
   currentCategory: Category;
   cartProducts: CartProductType[];
+  handleClearAttrabutesSelector:()=>void;
+  showCart:boolean
 }
 
 class Navbar extends Component<NavbarProps> {
@@ -42,6 +44,7 @@ class Navbar extends Component<NavbarProps> {
   }
 
   componentDidUpdate(prevProps: NavbarProps) {
+
     if (prevProps.navItems !== this.props.navItems) {
       this.setState({ navItems: this.props.navItems });
     }
@@ -49,8 +52,14 @@ class Navbar extends Component<NavbarProps> {
 
   handleNavItemSelect = (item: Category) => {
     this.props.getCategory(item);
+    this.props.handleClearAttrabutesSelector()
   };
-
+ handleCartOpen(){
+  console.log(this.props.showCart)
+  if(!this.props.showCart){
+     this.props.handleShowCart(true)
+    } 
+ }
   render() {
     const { status, error } = this.props;
 
@@ -85,22 +94,22 @@ class Navbar extends Component<NavbarProps> {
             <img src={Logo} alt="Logo" />
           </Link>
         </div>
-        <div className={this.styles.cartWrapper}>
+        <div onClick={()=> this.handleCartOpen()} className={this.styles.cartWrapper}>
           {this.state.cartItems.length > 0 && (
             <div className={this.styles.carNum}>
               {this.props.cartProducts.length}
             </div>
           )}
-          <img onClick={()=>this.props.handleShowCart()} src={Cart} alt="Cart" />
+          <img  src={Cart} alt="Cart" />
         </div>
       </nav>
     );
   }
 
   private styles = {
-    nav: "h-[80px] w-[100%] flex items-center  justify-between px-[8rem] ",
+    nav: "h-[80px] w-[100%] flex items-center fixed bg-white z-10 justify-between px-[8rem] ",
     navLinks: "flex justify-between  gap-10 ",
-    cartWrapper: "relative ",
+    cartWrapper: "relative cursor-pointer",
     carNum:
       " absolute text-[12px] bg-black text-white w-[20px] flex items-center justify-center rounded-[50%] bottom-2 left-2",
   };
@@ -113,12 +122,14 @@ const mapStateToProps = (state: any) => ({
   status: state.categories.status,
   currentCategory: state.categories.currentCategory,
   cartProducts: state.cart.cartProducts,
+  showCart:state.cart.showCart
 });
 
 const mapDispatchToProps = {
   fetchCategories,
   getCategory,
-  addArrayToCart,handleShowCart
+  addArrayToCart,handleShowCart,
+  handleClearAttrabutesSelector 
 
 };
 

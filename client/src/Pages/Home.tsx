@@ -58,7 +58,7 @@ class Home extends Component<HomeProps> {
     );
   }
   private style = {
-    mainDiv: "w-[100%] h-[100%] flex  flex-col py-10  ",
+    mainDiv: "w-[100%] h-[100%] flex  flex-col py-20  ",
     header: "text-[3rem] text-gray-800 px-[8rem] pb-20",
     cardSectionWrapper: "w-[100%] flex items-center justify-center",
     cardsSection:

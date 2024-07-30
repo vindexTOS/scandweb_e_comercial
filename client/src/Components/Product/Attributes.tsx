@@ -37,9 +37,9 @@ interface AttributesProps {
                     );
                   } else {
                     return (
-                      <div onClick={()=>this.  handleAttrabuteSelect(attr.name, item.value)}                         className={`${this.style.item} ${this.props.attrabuteSelector[attr.name] === item.value && "outline outline-4-red"}  `}
+                      <div onClick={()=>this.handleAttrabuteSelect(attr.name, item.value)}                         className={`${this.style.item} ${this.props.attrabuteSelector[attr.name] === item.value && "outline outline-4-red"}  `}
                       key={i}>
-                        {item.displayValue}
+                        {item.value.toUpperCase()}
                       </div>
                     );
                   }
@@ -58,7 +58,7 @@ interface AttributesProps {
   private style = {
     itemsWrapper: "",
     items: "flex gap-2",
-    item: "w-[63px] h-[45px]  flex items-center justify-center  text-gray-500",
+    item: "w-[63px] h-[45px]  flex items-center justify-center  text-gray-500 cursor-pointer",
   };
 }
 

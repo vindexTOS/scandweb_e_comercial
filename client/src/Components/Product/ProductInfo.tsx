@@ -64,10 +64,12 @@ class ProductInfo extends Component<ProductInfoProps, ProductInfoState> {
   //   }));
   // }
   handleCart(product:  CartProductType) {
-    let cart:   CartProductType[] = [];
-    product["selectedAttrabutes"] =  this.props.attrabuteSelector
-    const storedCart = localStorage.getItem("cart-product");
+    let cart:CartProductType[] = [];
+ 
 
+    product["selectedAttrabutes"] =  this.props.attrabuteSelector
+ 
+    const storedCart = localStorage.getItem("cart-product");
     if (storedCart) {
       cart = JSON.parse(storedCart);
     }

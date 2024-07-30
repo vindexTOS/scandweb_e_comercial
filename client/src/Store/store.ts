@@ -8,6 +8,16 @@ const store = configureStore({
     products: productsReducer,
     cart: cartReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+    
+        ignoredActions: ['cart/addToCart'],
+        ignoredActionPaths: ['payload.handleCart'],
+        ignoredPaths: ['cart.cartProducts'],
+      },
+    }),
 });
 
 export default store;
+

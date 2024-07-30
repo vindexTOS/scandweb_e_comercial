@@ -38,14 +38,20 @@ interface ProductsData {
     products: Product[];
   };
 }
-interface CartProductType {
+
+interface CartProductMetaData {
+  selectedAttrabutes?:any
+  storageID?:string 
+  count?:number
+}
+interface CartProductType  extends CartProductMetaData{
   name: string;
   description: string;
   attributes: Attribute[];
   prices: Price[];
   id: string;
  photo:string 
- selectedAttrabutes?:any
+
 }
 export type {
   Product,

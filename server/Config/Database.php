@@ -9,7 +9,7 @@ class Database {
     private $host = "localhost";
     private $db_name = "scandiweb";
     private $username = "root";
-    private $password = "258741";
+    private $password = "";
     private $conn;
     
     public function __construct() {
