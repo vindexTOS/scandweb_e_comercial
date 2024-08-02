@@ -1,7 +1,8 @@
 <?php 
 
 use App\Migrations\Migration;
-  
+ 
+    
  
 
 class Migration_008_Create_Order_Table extends Migration {
@@ -16,11 +17,11 @@ class Migration_008_Create_Order_Table extends Migration {
             CREATE TABLE orders (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 product_id INT,
-                FOREGIN KEY (product_id) REFERENCES products(id)
+                FOREIGN KEY (product_id)  REFERENCES products(id) 
                 );
            ";
 
-
+           $this->conn->exec($sql);
         } catch (PDOException $e) {
             echo "Error executing migration: " . $e->getMessage() . "\n";
 

@@ -8,13 +8,14 @@ use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Definition\ObjectType;
 
 class GraphQLSchema extends GraphQLTypes
-{
-    public static function build(): \GraphQL\Type\Schema
+{  public static function build(): \GraphQL\Type\Schema
     {
         $queryType = self::getQueryType();
+        $mutationType = self::getMutationType();
 
         return new \GraphQL\Type\Schema([
             'query' => $queryType,
+            'mutation' => $mutationType,
         ]);
     }
 
@@ -31,8 +32,7 @@ class GraphQLSchema extends GraphQLTypes
                     'resolve' => function ($root, $args, $context, $info) {
                         try {
                             $category = isset($args['category']) ? (string) $args['category'] : null;
-
-                            return $context['productResolver']->getProducts($args['category']);
+                            return $context['productResolver']->getProducts($category);
                         } catch (Throwable $e) {
                             error_log('Error in resolver: ' . $e->getMessage());
                             return null;
@@ -58,17 +58,42 @@ class GraphQLSchema extends GraphQLTypes
                         }
                     },
                 ],
-                "categories" => [
-                    "type" => Type::listOf($this->getCategoryType()),
-                    "resolve" => function ($root, $args, $context, $info) {
+                'categories' => [
+                    'type' => Type::listOf($this->getCategoryType()),
+                    'resolve' => function ($root, $args, $context, $info) {
                         try {
-                            return $context['categoriesReslover']->getCategories();
+                            return $context['categoriesResolver']->getCategories();
                         } catch (Throwable $e) {
                             error_log('Error in resolver: ' . $e->getMessage());
                             return null;
                         }
-                    }
-                ]
+                    },
+                ],
+            ],
+        ]);
+    }
+
+    protected function getMutationType(): ObjectType
+    {
+        return new ObjectType([
+            'name' => 'Mutation',
+            'fields' => [
+                'createOrder' => [
+                    'type' => $this->getOrderType(),
+                    'args' => [
+                        'product_id' => [
+                            'type' => Type::nonNull(Type::int()),
+                        ],
+                    ],
+                    'resolve' => function ($root, $args, $context, $info) {
+                        try {
+                            return $context['placeOrderResolver']->makeOrder($args['product_id']);
+                        } catch (Throwable $e) {
+                            error_log('Error in resolver: ' . $e->getMessage());
+                            return null;
+                        }
+                    },
+                ],
             ],
         ]);
     }

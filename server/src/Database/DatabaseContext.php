@@ -36,5 +36,18 @@ class DatabaseContext {
             throw new RuntimeException("Failed to fetch single row: " . $e->getMessage());
         }
     }
+
+    public function createSingle(string $query, array $params = []) {
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute($params);
+            
+             return $this->conn->lastInsertId();  
+            
+        } catch (PDOException $e) {
+             error_log('Database error: ' . $e->getMessage());
+            throw new RuntimeException("Failed to insert record: " . $e->getMessage());
+        }
+    }
  
 }

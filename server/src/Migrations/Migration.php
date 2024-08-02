@@ -1,7 +1,8 @@
 <?php
 
-// require_once __DIR__ . '/../../Config/Database.php';
 namespace App\Migrations;
+// require_once __DIR__ . '/../../Config/Database.php';
+
 // require 'vendor/autoload.php';
 
 
@@ -14,4 +15,4 @@ class Migration {
         $this->conn = $conn;
     }
 }
-?>
+ 

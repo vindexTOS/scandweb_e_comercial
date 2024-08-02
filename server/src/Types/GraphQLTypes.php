@@ -105,4 +105,16 @@ class GraphQLTypes {
                             ] 
                         ]);
                     }
+                    //  mutations
+                    protected function getOrderType(): ObjectType
+                    {
+                        return new ObjectType([
+                            'name' => 'Order',
+                            'fields' => [
+                                'id' => Type::nonNull(Type::int()),
+                                'product_id' => Type::nonNull(Type::int()),
+                            ],
+                        ]);
+                    }
+                
                 }

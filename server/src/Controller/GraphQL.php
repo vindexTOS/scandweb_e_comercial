@@ -6,72 +6,76 @@ use Throwable;
 use RuntimeException;
 use GraphQL\Type\Schema;
 use App\Types\GraphQLTypes;
-use GraphQL\Type\SchemaConfig;
-
 use GraphQL\Type\Definition\Type;
-use App\Resolvers\ProductResolver;
 use GraphQL\GraphQL as GraphQLBase;
+use App\Resolvers\ProductResolver;
 use App\Resolvers\CategoriesResolver;
+use App\Resolvers\PlaceOrderResolver;
 use App\Schema\GraphQLSchema;
-use GraphQL\Type\Definition\ObjectType;
 
-class GraphQL extends GraphQLSchema {
+class GraphQL extends GraphQLSchema
+{
     private $productResolver;
-    private $categoriesReslover; 
-    public function __construct(ProductResolver $productResolver,CategoriesResolver $categoriesReslover) {
-        $this->productResolver =$productResolver;
-        $this->categoriesReslover = $categoriesReslover;
-    }
-    
-    public function getTest() {
-        try {
-            // return $this->productResolver->getProducts();
-            // return $this->categoriesReslover->getCategories();
-            return $this->productResolver->getProduct("apple-airpods-pro");
+    private $categoriesResolver;
+    private $placeOrderResolver;
 
+    public function __construct(ProductResolver $productResolver, CategoriesResolver $categoriesResolver, PlaceOrderResolver $placeOrderResolver)
+    {
+        $this->productResolver = $productResolver;
+        $this->categoriesResolver = $categoriesResolver;
+        $this->placeOrderResolver = $placeOrderResolver;
+    }
+
+    public function getTest($request)
+    {
+        try {
+            // Example of getting categories with a request
+            return $this->categoriesResolver->getCategories();
         } catch (\Exception $e) {
-            var_dump($e);
-            echo "ERROR 500";
-            throw new Error('Failed to fetch prices: ' . $e->getMessage());
-            
+            error_log('Error fetching categories: ' . $e->getMessage());
+            throw new Error('Failed to fetch categories: ' . $e->getMessage());
         }
     }
-    
-    public function handle() {
+
+    public function handle()
+    {
         try {
-            
-            
-            
-            
+            // Initialize schema with both query and mutation types
             $schema = new Schema([
-                'query' =>  $this->getQueryType(  ),
+                'query' => $this->getQueryType(),
+                'mutation' => $this->getMutationType(),
             ]);
-            
+
             // Handle the GraphQL request
             $rawInput = file_get_contents('php://input');
             if ($rawInput === false) {
                 throw new RuntimeException('Failed to get php://input');
             }
-            
+
             $input = json_decode($rawInput, true);
             $query = $input['query'];
             $variableValues = $input['variables'] ?? null;
-            
+
             $rootValue = ['prefix' => 'You said: '];
             $context = [
                 'productResolver' => $this->productResolver,
-                'categoriesReslover' => $this->categoriesReslover,
-            ];            $result = GraphQLBase::executeQuery($schema, $query, $rootValue, $context, $variableValues);
+                'categoriesResolver' => $this->categoriesResolver,
+                'placeOrderResolver' => $this->placeOrderResolver,
+            ];
+
+            $result = GraphQLBase::executeQuery($schema, $query, $rootValue, $context, $variableValues);
             $output = $result->toArray();
         } catch (Throwable $e) {
             error_log('Error handling GraphQL request: ' . $e->getMessage());
             $output = [
-                'error' => [
-                    'message' => $e->getMessage(),
+                'errors' => [
+                    [
+                        'message' => $e->getMessage(),
+                    ],
                 ],
             ];
         }
-        
+
         header('Content-Type: application/json; charset=UTF-8');
         echo json_encode($output);
     }

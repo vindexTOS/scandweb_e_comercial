@@ -14,13 +14,15 @@ use FastRoute\RouteCollector;
 use App\Database\DatabaseContext;
 use App\Resolvers\ProductResolver;
 use App\Resolvers\CategoriesResolver;
+use App\Resolvers\PlaceOrderResolver;
 
 $database = new Database();
 $pdo = $database->getConnection();
 $databaseContext = new DatabaseContext($pdo);
 $productResolver= new ProductResolver($databaseContext);
 $categoriesReslover = new CategoriesResolver($databaseContext);
-$graphql = new GraphQL($productResolver, $categoriesReslover);
+$orderResolver = new PlaceOrderResolver($databaseContext);
+$graphql = new GraphQL($productResolver, $categoriesReslover,$orderResolver);
 
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     http_response_code(204);  
@@ -29,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 
 $dispatcher = FastRoute\simpleDispatcher(function(RouteCollector $r) use ($graphql) {
     $r->post('/graphql', [$graphql, 'handle']);
-    $r->get('/test', [$graphql, "getTest"]);
+    // $r->post('/test', [$graphql, "getTest"]);
 });
 
 $routeInfo = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
