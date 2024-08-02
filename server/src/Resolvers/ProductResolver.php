@@ -24,8 +24,6 @@ class ProductResolver {
   }
   
   
-  
-  
   public function getProducts(?string $category){
     try {
       // return json_encode(Product::getAllProducts($this->dbContext));

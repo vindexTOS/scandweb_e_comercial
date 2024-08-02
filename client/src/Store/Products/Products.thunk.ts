@@ -1,7 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchGraphql } from "../../Request/Graphql";
-import { create } from "domain";
-
+ 
 export const fetchProducts: any = createAsyncThunk(
   "products/fetchProducts",
   async (query: string) => {

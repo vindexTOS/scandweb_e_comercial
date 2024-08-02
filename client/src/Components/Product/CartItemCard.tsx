@@ -69,7 +69,7 @@ class CartItemCard extends Component<CartItemCardProps> {
     mainDiv: 'min-h-[167px] w-[100%] flex justify-between',
     infoDiv: 'w-[164px] flex flex-col pl-2',
     addDiv: 'min-h-[167px] w-[50px] mr-1 flex flex-col items-center justify-between',
-    iconBox: 'flex h-[24px] w-[24px] items-center justify-center outline outline-[1px]',
+    iconBox: 'flex h-[24px] w-[24px] items-center justify-center outline outline-[1px] cursor-pointer',
     photoDiv: '',
     img: 'h-[167px] w-[121px]',
     itemsWrapper: "",
