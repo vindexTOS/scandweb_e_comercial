@@ -41,29 +41,26 @@ class GraphQLSchema extends GraphQLTypes
                         }
                     },
                 ],
-                // 'singleProduct' => [
-                //     'args' => [
-                //         'id' => ['type' => Type::string()],
-                //     ],
-                //     'type' => $this->getProductType(),
-                //     'resolve' => function ($root, $args, $context, $info) {
-                //         try {
-                //             $id = $args["id"];
-                //             error_log('GraphQL Resolver called with ID: ' . $id);
-                //             $result = $context['productResolver']->getProduct($id);
-                //             error_log('Resolver result: ' . print_r($result, true));
-                //             return $result;
-                //         } catch (Throwable $e) {
-                //             error_log('GraphQL Resolver error: ' . $e->getMessage());
-                //             return null;
-                //         }
-                //     },
-                // ],
+                'singleProduct' => [
+                    'args' => [
+                        'id' => ['type' => Type::string()],
+                    ],
+                    'type' => $this->getProductType(),
+                    'resolve' => function ($root, $args, $context, $info) {
+                        try {
+                            $id = $args["id"];
+                            return $context['productResolver']->getProduct($id);
+                        } catch (Throwable $e) {
+                            error_log('GraphQL Resolver error: ' . $e->getMessage());
+                            return null;
+                        }
+                    },
+                ],
                 'categories' => [
                     'type' => Type::listOf($this->getCategoryType()),
                     'resolve' => function ($root, $args, $context, $info) {
                         try {
-                            return $context['categoriesResolver']->getCategories();
+                             return $context['categoriesResolver']->getCategories();
                         } catch (Throwable $e) {
                             error_log('Error in resolver: ' . $e->getMessage());
                             return null;
@@ -90,8 +87,7 @@ class GraphQLSchema extends GraphQLTypes
                     ],
                     'resolve' => function ($root, $args, $context, $info) {
                         try {
-                            // Use the resolver method to handle the mutation logic
-                            $orderResolver = $context['placeOrderResolver'];
+                              $orderResolver = $context['placeOrderResolver'];
                             $result = $orderResolver->makeOrder($args['orderInput'], $args['attributesInput']);
                             
                             if (!$result) {
