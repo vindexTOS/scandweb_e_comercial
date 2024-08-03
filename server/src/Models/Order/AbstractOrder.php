@@ -1,4 +1,5 @@
 <?php 
+ 
 
 namespace App\Models\Order;
 
@@ -21,6 +22,17 @@ abstract class AbstractOrder implements OrderInterface {
 
     public function getProductId(): int {
         return $this->product_id;
+    }
+
+    public static function createOrder(DatabaseContext $dbContext, array $orderInput): ?int {
+        try {
+            $query = "INSERT INTO orders (product_id) VALUES (:product_id)";
+            $params = [':product_id' => $orderInput['product_id']];
+            return $dbContext->createSingle($query, $params);
+        } catch (\Throwable $th) {
+            error_log('Error creating order: ' . $th->getMessage());
+            throw new RuntimeException("Failed to create order: " . $th->getMessage());
+        }
     }
 
     public static function getAllOrders(DatabaseContext $dbContext): array {
@@ -51,6 +63,37 @@ abstract class AbstractOrder implements OrderInterface {
             return null;
         } catch (PDOException $e) {
             throw new RuntimeException("Failed to fetch order by ID: " . $e->getMessage());
+        }
+    }
+
+    public static function createOrderAttribute(DatabaseContext $dbContext, array $attributeInput): void {
+        try {
+            $query = "INSERT INTO order_attribute (`key`, value, order_id) VALUES (:key, :value, :order_id)";
+            $params = [
+                ':key' => $attributeInput['key'],
+                ':value' => $attributeInput['value'],
+                ':order_id' => $attributeInput['order_id']
+            ];
+            $dbContext->createSingle($query, $params);
+        } catch (\Throwable $th) {
+            error_log('Error creating order attribute: ' . $th->getMessage());
+            throw new RuntimeException("Failed to create order attribute: " . $th->getMessage());
+        }
+    }
+
+    public static function getOrderAttributesByOrderId(DatabaseContext $dbContext, int $orderId): array {
+        try {
+            $query = "SELECT * FROM order_attribute WHERE order_id = :order_id";
+            $attributesData = $dbContext->getAll($query, [':order_id' => $orderId]);
+
+            $attributes = [];
+            foreach ($attributesData as $data) {
+                $attributes[] = $data;
+            }
+
+            return $attributes;
+        } catch (PDOException $e) {
+            throw new RuntimeException("Failed to fetch order attributes: " . $e->getMessage());
         }
     }
 }

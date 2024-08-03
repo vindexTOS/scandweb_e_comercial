@@ -5,6 +5,7 @@ namespace App\Types;
 
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Definition\ObjectType;
+use GraphQL\Type\Definition\InputObjectType;
 
 class GraphQLTypes { 
     protected function getPriceType(): ObjectType {
@@ -105,16 +106,75 @@ class GraphQLTypes {
                             ] 
                         ]);
                     }
-                    //  mutations
-                    protected function getOrderType(): ObjectType
-                    {
-                        return new ObjectType([
-                            'name' => 'Order',
-                            'fields' => [
-                                'id' => Type::nonNull(Type::int()),
-                                'product_id' => Type::nonNull(Type::int()),
-                            ],
-                        ]);
-                    }
-                
+// mutations 
+  // Define Order type for result
+  protected function getCreateOrderResultType(): ObjectType
+  {
+      return new ObjectType([
+          'name' => 'CreateOrderResult',
+          'fields' => [
+              'order' => [
+                  'type' => $this->getOrderType(),
+                  'resolve' => function($root, $args, $context, $info) {
+                      return $root['order'];
+                  }
+              ],
+          ],
+      ]);
+  }
+
+  // Define Order type
+  protected function getOrderType(): ObjectType
+  {
+      return new ObjectType([
+          'name' => 'Order',
+          'fields' => [
+              'id' => Type::nonNull(Type::id()),
+              'product_id' => Type::nonNull(Type::int()),
+              'attributes' => [
+                  'type' => Type::listOf($this->getOrderAttributeType()),
+                  'resolve' => function($root, $args, $context, $info) {
+                      return $root['attributes'];
+                  }
+              ],
+          ],
+      ]);
+  }
+
+  // Define OrderInput type
+  protected function getOrderInputType(): InputObjectType
+  {
+      return new InputObjectType([
+          'name' => 'OrderInput',
+          'fields' => [
+              'product_id' => Type::nonNull(Type::int()),
+          ],
+      ]);
+  }
+
+  // Define OrderAttributeInput type
+  protected function getOrderAttributeInputType(): InputObjectType
+  {
+      return new InputObjectType([
+          'name' => 'OrderAttributeInput',
+          'fields' => [
+              'key' => Type::nonNull(Type::string()),
+              'value' => Type::nonNull(Type::string()),
+          ],
+      ]);
+  }
+
+  // Define OrderAttribute type
+  protected function getOrderAttributeType(): ObjectType
+  {
+      return new ObjectType([
+          'name' => 'OrderAttribute',
+          'fields' => [
+              'key' => Type::nonNull(Type::string()),
+              'value' => Type::nonNull(Type::string()),
+          ],
+      ]);
+  }
+
+
                 }

@@ -45,24 +45,29 @@ class GraphQL extends GraphQLSchema
                 'query' => $this->getQueryType(),
                 'mutation' => $this->getMutationType(),
             ]);
-
+    
+            // Debug: Print registered types
+            foreach ($schema->getTypeMap() as $typeName => $type) {
+                error_log("Type Name: $typeName");
+            }
+    
             // Handle the GraphQL request
             $rawInput = file_get_contents('php://input');
             if ($rawInput === false) {
                 throw new RuntimeException('Failed to get php://input');
             }
-
+    
             $input = json_decode($rawInput, true);
             $query = $input['query'];
             $variableValues = $input['variables'] ?? null;
-
+    
             $rootValue = ['prefix' => 'You said: '];
             $context = [
                 'productResolver' => $this->productResolver,
                 'categoriesResolver' => $this->categoriesResolver,
                 'placeOrderResolver' => $this->placeOrderResolver,
             ];
-
+    
             $result = GraphQLBase::executeQuery($schema, $query, $rootValue, $context, $variableValues);
             $output = $result->toArray();
         } catch (Throwable $e) {
@@ -75,7 +80,7 @@ class GraphQL extends GraphQLSchema
                 ],
             ];
         }
-
+    
         header('Content-Type: application/json; charset=UTF-8');
         echo json_encode($output);
     }
