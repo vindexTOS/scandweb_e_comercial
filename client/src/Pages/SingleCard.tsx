@@ -44,6 +44,7 @@ class SingleCard extends Component<SingleCardProps> {
           <ImageGallery gallery={product.gallery} />
 
           <ProductInfo
+          inStock={product.inStock}
             id={product.id}
             name={product.name}
             attributes={product.attributes}

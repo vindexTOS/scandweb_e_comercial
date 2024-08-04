@@ -3,6 +3,7 @@ import { Attribute, CartProductType, Price } from "../../Types/ProductsInterface
 import Attributes from "./Attributes";
 import { connect } from "react-redux";
 import { addToCart } from "../../Store/Cart/Cart.slice";
+import Status from "../Status/Status";
 
   
 
@@ -10,6 +11,7 @@ interface ProductInfoProps {
   attributes: Attribute[];
   description: string;
   name: string;
+  inStock:boolean 
   id: string;
   prices: Price[];
   addToCart: (state: any) => void;
@@ -23,6 +25,8 @@ interface ProductInfoProps {
 interface ProductInfoState {
   isExpanded: boolean;
   numberOfItems: number;
+  error:string 
+  succ:string 
  
 }
 
@@ -32,6 +36,8 @@ class ProductInfo extends Component<ProductInfoProps, ProductInfoState> {
     this.state = {
       isExpanded: false,
       numberOfItems: 0,
+      error:"",
+      succ:""
       // attrabuteSelector:{}
     };
    }
@@ -63,22 +69,51 @@ class ProductInfo extends Component<ProductInfoProps, ProductInfoState> {
   //     }
   //   }));
   // }
+
+
+   handlError(err:string){
+    this.setState({error: err})
+    setTimeout(()=>{
+      this.setState({error:""})
+
+    },3000)
+   }
+
+   handleSuccsess(str:string){
+     this.setState({succ:str})
+     setTimeout(()=>{
+      this.setState({succ:""})
+
+    },3000)
+   }
   handleCart(product:  CartProductType) {
-    let cart:CartProductType[] = [];
- 
+    if(this.props.attributes && this.props.attributes.length >= 1 && !Object.keys(this.props.attrabuteSelector).length      ) {
+      this.handlError("Chose attrabute")
+    } else if(!this.props.inStock){ 
+       
+      this.handlError("Item is out of stock")
 
-    product["selectedAttrabutes"] =  this.props.attrabuteSelector
- 
-    const storedCart = localStorage.getItem("cart-product");
-    if (storedCart) {
-      cart = JSON.parse(storedCart);
+
+    } else{
+       let cart:CartProductType[] = [];
+   
+  
+      product["selectedAttrabutes"] =  this.props.attrabuteSelector
+   
+      const storedCart = localStorage.getItem("cart-product");
+      if (storedCart) {
+        cart = JSON.parse(storedCart);
+      }
+  
+      cart.push(product);
+      this.handleNumberCount(cart);
+      localStorage.setItem("cart-product", JSON.stringify(cart));
+  
+      this.props.addToCart(product);
+      this.handleSuccsess("item has been added!")
     }
-
-    cart.push(product);
-    this.handleNumberCount(cart);
-    localStorage.setItem("cart-product", JSON.stringify(cart));
-
-    this.props.addToCart(product);
+    
+    
   }
   toggleDescription = () => {
     this.setState((prevState) => ({
@@ -135,6 +170,9 @@ class ProductInfo extends Component<ProductInfoProps, ProductInfoState> {
 
     return (
       <div className={this.style.main}>
+       {this.state.error && <Status message={this.state.error } type="error"/>}
+       {this.state.succ && <Status message={this.state.succ } type="succ"/>}
+
         <h1 className={this.style.header}>{name}</h1>
         <Attributes  attributes={attributes} />
         <div className={this.style.price}>

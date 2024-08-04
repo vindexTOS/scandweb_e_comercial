@@ -95,11 +95,11 @@ class Navbar extends Component<NavbarProps> {
           </Link>
         </div>
         <div onClick={()=> this.handleCartOpen()} className={this.styles.cartWrapper}>
-          {this.state.cartItems.length > 0 && (
+        
             <div className={this.styles.carNum}>
               {this.props.cartProducts.length}
             </div>
-          )}
+     
           <img  src={Cart} alt="Cart" />
         </div>
       </nav>
