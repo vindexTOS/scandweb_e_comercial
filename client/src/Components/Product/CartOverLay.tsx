@@ -158,6 +158,7 @@ class CartOverlay extends Component<CartOverLayProps, CartOverlayState> {
             )}
           </div>
           <div className="flex w-[100%] items-center justify-center pb-7">
+            {/* realy */}
             <button
               onClick={() => this.handleMakeOrder()}
               className="bg-green-400 text-white   w-[90%] text-center h-[52px]"
