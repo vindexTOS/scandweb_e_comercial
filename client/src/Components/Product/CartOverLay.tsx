@@ -4,10 +4,14 @@ import {
   addArrayToCart,
   addToCart,
   handleShowCart,
+  handleStatus,
 } from "../../Store/Cart/Cart.slice";
 import CartItemCard from "./CartItemCard";
 import { CartProductType } from "../../Types/ProductsInterface";
 import { postOrder } from "../../Store/Cart/Cart.thunk";
+import { StatsFs } from "fs";
+import Status from "../Status/Status";
+import { StatusType } from "../../Types/StatusInterface";
 
 interface CartOverLayProps {
   handleShowCart: (bool: boolean) => void;
@@ -16,6 +20,8 @@ interface CartOverLayProps {
   addArrayToCart: (product: any) => void;
   showCart: boolean;
   postOrder: ( {product_id  , attributes  }:{product_id:string , attributes :any} ) => void;
+  status:StatusType
+  handleStatus:()=>void;
 }
 
 interface CartOverlayState {
@@ -125,14 +131,17 @@ class CartOverlay extends Component<CartOverLayProps, CartOverlayState> {
       const { item } = groupedCartItems[i];
       const { product_id, selectedAttrabutes } = item;
  
-    
+    console.log(product_id);
       const resultArray = Object.entries(selectedAttrabutes).map(([key, value]) => ({
         key,
         value
       }));
       
-  
-      this.props.postOrder(product_id, resultArray);
+       this.props.postOrder({product_id,attributes : resultArray});
+       setTimeout(()=>{
+        this.props.handleStatus() 
+        this.props. handleShowCart(false)},2000)
+     
     }
   }
 
@@ -146,7 +155,7 @@ class CartOverlay extends Component<CartOverLayProps, CartOverlayState> {
           ref={this.overlayRef}
           className="bg-white w-[425px] h-[628px] overflow-y-auto mr-20 shadow-lg flex flex-col gap-10"
         >
-          <div>
+          <div className="px-10 py-4">
             <span className="text-xl font-bold mb-5 pb-10">My Bag,</span>{" "}
             <span>{cartItems.length} items</span>
           </div>
@@ -162,19 +171,21 @@ class CartOverlay extends Component<CartOverLayProps, CartOverlayState> {
                 />
               ))
             ) : (
-              <div>No items in cart</div>
+              <div className="flex items-center justify-center  ">No items in cart</div>
             )}
           </div>
           <div className="flex w-[100%] items-center justify-center pb-7">
             {/* realy */}
-            <button
+          { groupedCartItems.length > 0 && <button
               onClick={() => this.handleMakeOrder()}
               className="bg-green-400 text-white   w-[90%] text-center h-[52px]"
             >
               PLACE ORDER
-            </button>
+            </button>}
           </div>
         </div>
+        
+    {this.props.status !== "idle"  ?  < Status message= {this.props.status === "failed" ? "Something went wrong" : "Order has been submited!"} type={this.props.status == "failed" ? "error" : ""} /> : "Loading..."}
       </div>
     );
   }
@@ -183,13 +194,14 @@ class CartOverlay extends Component<CartOverLayProps, CartOverlayState> {
 const mapStateToProps = (state: any) => ({
   cartItems: state.cart.cartProducts,
   showCart: state.cart.showCart,
+  status:state.cart.status
 });
 
 const mapDispatchToProps = {
   handleShowCart,
   addToCart,
   addArrayToCart,
-  postOrder,
+  postOrder,handleStatus,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CartOverlay);

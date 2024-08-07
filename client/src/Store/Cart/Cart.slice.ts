@@ -33,7 +33,9 @@ const CartSlice = createSlice({
     handleShowCart: (state, action) => {
       state.showCart = action.payload;
     },
-
+  handleStatus:(state )=>{
+      state.status = 'idle'
+  },
     handleAttrabuteSelector: (
       state,
       action: PayloadAction<{ key: string; value: any }>
@@ -51,6 +53,10 @@ const CartSlice = createSlice({
       })
       .addCase(postOrder.fulfilled, (state, action) => {
         state.status = "succeeded";
+         state. attrabuteSelector = []
+         state.cartProducts = []
+    
+         localStorage.removeItem("cart-product")
       })
       .addCase(postOrder.rejected, (state, action) => {
         state.status = "failed";
@@ -64,6 +70,6 @@ export const {
   addArrayToCart,
   handleShowCart,
   handleAttrabuteSelector,
-  handleClearAttrabutesSelector,
+  handleClearAttrabutesSelector,handleStatus
 } = CartSlice.actions;
 export default CartSlice.reducer;
