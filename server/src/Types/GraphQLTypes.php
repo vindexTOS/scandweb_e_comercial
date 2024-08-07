@@ -44,6 +44,7 @@ class GraphQLTypes {
                 'name' => 'Product',
                 'fields' => [
                     'id' => Type::nonNull(Type::id()),
+                    'product_id'=>Type::nonNull(Type::id()),
                     'name' => Type::nonNull(Type::string()),
                     'inStock' => Type::nonNull(Type::boolean()),
                     'gallery' => Type::listOf(Type::nonNull(Type::string())),

@@ -54,6 +54,7 @@ abstract class AbstractProduct implements ProductInterface {
         
         return [
             'id' => $productData['graphqlId'],
+            "product_id"=>$productData['id'],
             'name' => $productData['name'],
             'inStock' => $productData['inStock'] == 0 ? false : true,
             'gallery' => $galleryArray,

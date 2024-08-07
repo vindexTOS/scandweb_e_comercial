@@ -18,7 +18,7 @@ interface ProductInfoProps {
   cartProducts: any[];
   gallery:string[]
   attrabuteSelector:any
-
+  product_id:string | number
 
 }
 
@@ -87,6 +87,7 @@ class ProductInfo extends Component<ProductInfoProps, ProductInfoState> {
     },3000)
    }
   handleCart(product:  CartProductType) {
+    console.log(product)
     if(this.props.attributes && this.props.attributes.length >= 1 && !Object.keys(this.props.attrabuteSelector).length      ) {
       this.handlError("Chose attrabute")
     } else if(!this.props.inStock){ 
@@ -122,7 +123,7 @@ class ProductInfo extends Component<ProductInfoProps, ProductInfoState> {
   };
 
   render() {
-    const { name, attributes, prices, description, id , gallery  } = this.props;
+    const { name, attributes, prices, description, id , gallery, product_id  } = this.props;
     const { isExpanded } = this.state;
     const maxLength = 500;
 
@@ -136,6 +137,7 @@ class ProductInfo extends Component<ProductInfoProps, ProductInfoState> {
                 __html: description.replace(/\\n/g, "<br>"),
               }}
             />
+       
             {description.length >= maxLength && (
               <button
                 className="text-blue-500  "
@@ -189,11 +191,11 @@ class ProductInfo extends Component<ProductInfoProps, ProductInfoState> {
         </div>
         <button
           onClick={() =>
-            this.handleCart({ name, attributes, prices, description, id ,photo:gallery[0] })
+            this.handleCart({ name, attributes, prices, description, id ,photo:gallery[0] , product_id })
           }
           className={this.style.btn}
         >
-          Add To Cart +
+          Add To Cart + 
           {this.state.numberOfItems > 0 && this.state.numberOfItems}
         </button>
 

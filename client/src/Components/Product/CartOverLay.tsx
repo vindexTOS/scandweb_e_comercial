@@ -15,7 +15,7 @@ interface CartOverLayProps {
   addToCart: (product: CartProductType) => void;
   addArrayToCart: (product: any) => void;
   showCart: boolean;
-  postOrder: (product_id: string, selectedAttributes: any) => void;
+  postOrder: ( {product_id  , attributes  }:{product_id:string , attributes :any} ) => void;
 }
 
 interface CartOverlayState {
@@ -120,11 +120,19 @@ class CartOverlay extends Component<CartOverLayProps, CartOverlayState> {
 
   handleMakeOrder() {
     const groupedCartItems: any = this.groupCartItems(this.state.cartItems);
-
+ 
     for (let i = 0; i < groupedCartItems.length; i++) {
       const { item } = groupedCartItems[i];
-      const { id, selectedAttrabutes } = item;
-       this.props.postOrder(id, selectedAttrabutes);
+      const { product_id, selectedAttrabutes } = item;
+ 
+    
+      const resultArray = Object.entries(selectedAttrabutes).map(([key, value]) => ({
+        key,
+        value
+      }));
+      
+  
+      this.props.postOrder(product_id, resultArray);
     }
   }
 

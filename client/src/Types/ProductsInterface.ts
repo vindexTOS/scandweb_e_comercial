@@ -31,6 +31,7 @@ interface Product {
   category: string;
   attributes: Attribute[];
   prices: Price[];
+  product_id:number | string
 }
 
 interface ProductsData {
@@ -51,6 +52,7 @@ interface CartProductType  extends CartProductMetaData{
   prices: Price[];
   id: string;
  photo:string 
+ product_id:number | string
 
 }
 export type {

@@ -25,7 +25,7 @@ class SingleCard extends Component<SingleCardProps> {
   }
 
   fetchProductForCategory(id: string) {
-    const productQuery = `{ singleProduct(id: "${id}")   { name id gallery inStock category description attributes { id name type items { id displayValue value } }  prices { id amount currency { label symbol } }   } }`;
+    const productQuery = `{ singleProduct(id: "${id}")   { name id product_id gallery inStock category description attributes { id name type items { id displayValue value } }  prices { id amount currency { label symbol } }   } }`;
     this.props.fetchSingleProduct(productQuery);
   }
 
@@ -42,8 +42,7 @@ class SingleCard extends Component<SingleCardProps> {
       return (
         <main className={this.style.main}>
           <ImageGallery gallery={product.gallery} />
-
-          <ProductInfo
+           <ProductInfo
           inStock={product.inStock}
             id={product.id}
             name={product.name}
@@ -51,6 +50,7 @@ class SingleCard extends Component<SingleCardProps> {
             description={product.description}
             prices={product.prices}
             gallery={product.gallery}
+            product_id={product.product_id}
           />
         </main>
       );
