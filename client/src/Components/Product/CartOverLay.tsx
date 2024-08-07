@@ -157,7 +157,7 @@ class CartOverlay extends Component<CartOverLayProps, CartOverlayState> {
         >
           <div className="px-10 py-4">
             <span className="text-xl font-bold mb-5 pb-10">My Bag,</span>{" "}
-            <span>{cartItems.length} items</span>
+            <span data-testid='cart-total'>{cartItems.length} items</span>
           </div>
           <div className="w-[100%] py-10 flex flex-col gap-10">
             {groupedCartItems.length > 0 ? (
@@ -176,12 +176,12 @@ class CartOverlay extends Component<CartOverLayProps, CartOverlayState> {
           </div>
           <div className="flex w-[100%] items-center justify-center pb-7">
             {/* realy */}
-          { groupedCartItems.length > 0 && <button
+     <button   disabled={groupedCartItems.length > 0 }
               onClick={() => this.handleMakeOrder()}
-              className="bg-green-400 text-white   w-[90%] text-center h-[52px]"
+              className={`${groupedCartItems.length > 0 ? 'bg-green-400' : "  bg-gray-400"} text-white   w-[90%] text-center h-[52px]`} 
             >
               PLACE ORDER
-            </button>}
+            </button> 
           </div>
         </div>
         

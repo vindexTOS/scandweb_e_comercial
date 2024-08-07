@@ -76,6 +76,8 @@ class Navbar extends Component<NavbarProps> {
         <section className={this.styles.navLinks}>
           {this.state.navItems?.map((item) => (
             <Link
+              data-testid={ this.props.currentCategory.name === item.name ?'active-category-link' : 'category-link' }
+              
               to="/"
               key={item.id}
               className={`cursor-pointer ${

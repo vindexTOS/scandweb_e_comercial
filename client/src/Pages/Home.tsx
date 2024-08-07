@@ -25,7 +25,7 @@ class Home extends Component<HomeProps> {
   }
 
   fetchProductsForCategory(categoryId: string) {
-    const categoryQuery = `{ products(category: "${categoryId}") { name id gallery inStock category prices { id amount currency { label symbol } }} }`;
+    const categoryQuery = `{ products(category: "${categoryId}") { name id gallery inStock category  attributes { id name type items { id displayValue value } }  prices { id amount currency { label symbol } }} }`;
     this.props.fetchProducts(categoryQuery);
   }
   render() {

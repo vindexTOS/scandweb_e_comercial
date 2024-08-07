@@ -10,16 +10,17 @@ interface CartItemCardProps extends CartProductType {
 class CartItemCard extends Component<CartItemCardProps> {
   renderAttributes(attributes: Attribute[], selectedAttrabutes: any) {
     return attributes?.map((attr: Attribute, index: number) => (
-      <div className={this.styles.itemsWrapper} key={index}>
+      <div className={this.styles.itemsWrapper} key={index} data-testid={`cart-item-attribute-${attr.name.toLowerCase().replace(/ /g, '-')}`}>
         <h2 className="font-bold text-[13px]">{attr.name.toUpperCase()}:</h2>
         <div className={this.styles.items}>
           {attr.items.map((item: any, i: number) => {
             if (attr.name === "Color" && attr.type === "swatch") {
               return (
-                <div
+                <div 
                   className={`${this.styles.item} ${selectedAttrabutes[attr.name] === item.value && "outline outline-4-red"}`}
                   key={i}
                   style={{ backgroundColor: item.value }}
+                  data-testid={`cart-item-attribute-${attr.name.toLowerCase().replace(/ /g, '-')}-${item.value.toLowerCase().replace(/ /g, '-')}${selectedAttrabutes[attr.name] === item.value ? '-selected' : ''}`}
                 >
                   {attr.name !== "Color" && item.value.toUpperCase()}
                 </div>
@@ -29,6 +30,7 @@ class CartItemCard extends Component<CartItemCardProps> {
                 <div
                   className={`${this.styles.item} ${selectedAttrabutes[attr.name] === item.value && "outline outline-4-red"}`}
                   key={i}
+                  data-testid={`cart-item-attribute-${attr.name.toLowerCase().replace(/ /g, '-')}-${item.value.toLowerCase().replace(/ /g, '-')}${selectedAttrabutes[attr.name] === item.value ? '-selected' : ''}`}
                 >
                   {item.value.toUpperCase()}
                 </div>
@@ -54,9 +56,9 @@ class CartItemCard extends Component<CartItemCardProps> {
           <div>{this.renderAttributes(attributes, selectedAttrabutes)}</div>
         </div>
         <div className={this.styles.addDiv}>
-          <div onClick={() => handleCart(this.props)} className={this.styles.iconBox}>+</div>
-          <div>{count}</div>
-          <div onClick={() => handleRemove(this.props)} className={this.styles.iconBox}>-</div>
+          <div onClick={() => handleCart(this.props)} className={this.styles.iconBox} data-testid="cart-item-amount-increase">+</div>
+          <div data-testid="cart-item-amount">{count}</div>
+          <div onClick={() => handleRemove(this.props)} className={this.styles.iconBox} data-testid="cart-item-amount-decrease">-</div>
         </div>
         <div className={this.styles.photoDiv}>
           <img className={this.styles.img} src={photo} />

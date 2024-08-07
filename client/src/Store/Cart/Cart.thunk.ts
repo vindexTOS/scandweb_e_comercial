@@ -27,7 +27,7 @@ export const postOrder:any = createAsyncThunk('order/post', async ( {product_id 
     },
     attributesInput 
   };
-console.log(variables)
+ 
   // Serialize the query and variables into a JSON string
   const requestBody = JSON.stringify({
     query: queryString,

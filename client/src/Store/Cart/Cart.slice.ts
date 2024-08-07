@@ -53,7 +53,7 @@ const CartSlice = createSlice({
       })
       .addCase(postOrder.fulfilled, (state, action) => {
         state.status = "succeeded";
-         state. attrabuteSelector = []
+         state. attrabuteSelector = {}
          state.cartProducts = []
     
          localStorage.removeItem("cart-product")
