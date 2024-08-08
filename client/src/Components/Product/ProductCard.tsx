@@ -38,25 +38,34 @@ class ProductCard extends Component<ProductCardProps, ProductCardState> {
   };
 
  
-  handleCart(product:  any) {
-    console.log(product)
+  handleCart(product: any) {
+    console.log(product);
   
-       let cart:CartProductType[] = [];
-   
-     let resultProduct = {...product,selectedAttrabutes:product.attributes[0], photo:product.gallery[0]  }
-    //  resultProduct ["selectedAttrabutes"]  
-   
-      const storedCart = localStorage.getItem("cart-product");
-      if (storedCart) {
-        cart = JSON.parse(storedCart);
-      }
+    let cart: CartProductType[] = [];
   
-      cart.push( resultProduct );
- 
-      localStorage.setItem("cart-product", JSON.stringify(cart));
+    // Create an object with attribute names as keys and their first item's value as the value
+    const selectedAttrabutes = product.attributes.reduce((acc: any, attribute: any) => {
+      acc[attribute.name] = attribute.items[0].value;
+      return acc;
+    }, {});
   
-      this.props.addToCart( resultProduct );
+    // Create the result product with the selected attributes and photo
+    let resultProduct = {
+      ...product,
+      selectedAttrabutes,
+      photo: product.gallery[0]
+    };
   
+    const storedCart = localStorage.getItem("cart-product");
+    if (storedCart) {
+      cart = JSON.parse(storedCart);
+    }
+  
+    cart.push(resultProduct);
+  
+    localStorage.setItem("cart-product", JSON.stringify(cart));
+  
+    this.props.addToCart(resultProduct);
   }
   render() {
     const { product } = this.props;

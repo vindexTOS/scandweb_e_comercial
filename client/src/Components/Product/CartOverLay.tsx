@@ -176,7 +176,7 @@ class CartOverlay extends Component<CartOverLayProps, CartOverlayState> {
           </div>
           <div className="flex w-[100%] items-center justify-center pb-7">
             {/* realy */}
-     <button   disabled={groupedCartItems.length > 0 }
+     <button   disabled={groupedCartItems.length  < 0 }
               onClick={() => this.handleMakeOrder()}
               className={`${groupedCartItems.length > 0 ? 'bg-green-400' : "  bg-gray-400"} text-white   w-[90%] text-center h-[52px]`} 
             >
