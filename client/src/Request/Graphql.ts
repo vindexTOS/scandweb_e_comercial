@@ -1,6 +1,6 @@
 import { request, gql } from "graphql-request";
 export const fetchGraphql = async (queryString: string) => {
-  const endpoint = "http://138.197.229.66/graphql";
+  const endpoint = "https://138.197.229.66/graphql";
   const query = gql`
     ${queryString}
   `;
@@ -16,7 +16,7 @@ export const fetchGraphql = async (queryString: string) => {
 
  
 export const fetchPostRequest = async (requestBody:any) => {
-  const endpoint = 'http://138.197.229.66/graphql';
+  const endpoint = 'https://138.197.229.66/graphql';
   
   try {
     const response = await fetch(endpoint, {

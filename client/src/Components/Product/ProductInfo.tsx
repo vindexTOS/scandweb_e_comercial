@@ -185,7 +185,7 @@ const renderDescription = () => {
   );
 };
     return (
-      <div className={this.style.main}>
+      <div    className={this.style.main}>
         {this.state.error && <Status message={this.state.error } type="error"/>}
         {this.state.succ && <Status message={this.state.succ } type="succ"/>}
 
