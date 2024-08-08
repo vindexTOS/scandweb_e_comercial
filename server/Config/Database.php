@@ -6,9 +6,9 @@ use PDO;
 use PDOException;
 
 class Database {
-    private $host = "localhost";
+    private $host = "127.0.0.1";
     private $db_name = "scandiweb";
-    private $username = "root";
+    private $username = "eideasMySql";
     private $password = "WdvgY159753ZxC";
     private $conn;
     
