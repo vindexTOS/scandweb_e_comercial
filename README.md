@@ -70,7 +70,7 @@ The application is hosted on a Linux server.
 
  ## end pint
 
-  - [http://localhost:8000/graphql ](http://138.197.229.66/graphql)
+  - http://138.197.229.66/graphql
 
   ### simple query to testing  ` { products  { name id gallery inStock category prices { id amount currency { label symbol } }} } `
 
